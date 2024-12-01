@@ -1,0 +1,167 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6; /* Softer background */
+}
+
+.form-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: linear-gradient(145deg, #ffffff, #f9f9f9); /* Subtle gradient */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 200px; /* Slightly wider input areas */
+  margin-right: 15px;
+}
+
+.form-group:last-child {
+  margin-right: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #333;
+  font-weight: normal; /* Changed to normal to remove bold */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fafafa; /* Softer input background */
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #007bff; /* Highlighted border */
+  outline: none;
+}
+
+.form-group.small-input {
+  max-width: 120px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+  max-height: 120px;
+}
+
+/* Save Button */
+.save-button {
+  background-color: #45a049;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: normal; /* Changed to normal to remove bold */
+  border-radius: 6px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05); /* Subtle hover effect */
+}
+
+/* Delivery Format Inputs */
+.form-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-group input[type="text"][readOnly] {
+  background-color: #e9ecef; /* Light gray for readonly fields */
+}
+
+/* Radio Buttons */
+.radio-group label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 15px;
+  font-weight: normal; /* Changed to normal to remove bold */
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 2px;
+}
+
+/* Select Dropdowns */
+select {
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E") no-repeat right 10px center;
+  appearance: none;
+  background-size: 16px 16px;
+}
+
+/* Notes and Objectives Textareas */
+textarea {
+  width: 100%;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 8px;  /* Adds some space between the checkbox and the label */
+  cursor: pointer;   /* Change the cursor to a pointer when hovering over the checkbox */
+}
+
+/* Prevent large clickable areas by ensuring label is not too wide */
+.checkbox-group label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .form-row {
+    flex-wrap: wrap;
+  }
+
+  .form-group {
+    min-width: 100%;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .save-button {
+    position: static;
+    display: block;
+    margin: 20px auto 0;
+  }
+}

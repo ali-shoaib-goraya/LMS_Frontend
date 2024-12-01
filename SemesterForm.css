@@ -1,0 +1,122 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .form-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-title {
+    font-size: 24px;
+    font-weight: 400; /* Normal weight */
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  /* Separator Line */
+  .title-separator {
+    height: 2px;
+    background-color: #ddd;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Form Row */
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 220px;
+  }
+  
+  .half-width {
+    flex: 0 0 50%; /* Half of the row */
+    max-width: 50%;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4a4a4a;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+  
+  textarea {
+    resize: none;
+  }
+  
+  /* Checkbox Styling */
+  .checkbox-group {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .checkbox-group label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #4a4a4a;
+  }
+  
+  /* Full-Width Class for Notes */
+  .full-width {
+    flex: 1 1 100%;
+  }
+  
+  /* Save Button and Footer */
+  .form-footer {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .save-button {
+    padding: 0.75rem 2rem;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-button:hover {
+    background-color: #218838;
+  }
+  
