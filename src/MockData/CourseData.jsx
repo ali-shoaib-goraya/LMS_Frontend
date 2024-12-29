@@ -30,5 +30,37 @@ export const sampleCourses = [
     semester: "Semester-7-CS-450",
     term: "Fall 2024",
     instructorName: "Muhammad Shahzad Arif",
+  },
+  {
+    id: 5,
+    code: "CS-450",
+    title: "Computer Networks",
+    semester: "Semester-7-CS-450",
+    term: "Fall 2024",
+    instructorName: "Muhammad Shahzad Arif",
+  },
+  {
+    id: 6,
+    code: "CS-450",
+    title: "Computer Networks",
+    semester: "Semester-7-CS-450",
+    term: "Fall 2024",
+    instructorName: "Muhammad Shahzad Arif",
+  },
+  {
+    id: 7,
+    code: "CS-450",
+    title: "Computer Networks",
+    semester: "Semester-7-CS-450",
+    term: "Fall 2024",
+    instructorName: "Muhammad Shahzad Arif",
+  },
+  {
+    id: 7 ,
+    code: "CS-450",
+    title: "Computer Networks",
+    semester: "Semester-7-CS-450",
+    term: "Fall 2024",
+    instructorName: "Muhammad Shahzad Arif",
   }
 ];
