@@ -2,7 +2,7 @@ import React from 'react';
 import BellIcon from '../assets/bell.png'; 
 import Bars3Icon from '../assets/bars.png'; 
 import logo from '../assets/logo.png';
-import ProfileImage from '../assets/profile.jpg'; // Assuming you have a profile image
+import ProfileImage from '../assets/profile.jpg';
 
 function Navbar({ onMenuClick }) {
   return (

@@ -2,10 +2,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // Paths to local images
 import HomeIcon from '@/assets/home.png';
-import BookOpenIcon from '@/assets/book.jpg';
+import BookOpenIcon from '@/assets/book.png';
 import CalendarIcon from '@/assets/calender.png';
-import ClipboardListIcon from '@/assets/clipboardlist.jpg';
-import FolderIcon from '@/assets/folder.jpg';
+import ClipboardListIcon from '@/assets/clipboardlist.png';
+import FolderIcon from '@/assets/folder.png';
 import FoldersIcon from '@/assets/folders.png';
 
 const Sidebar = () => {

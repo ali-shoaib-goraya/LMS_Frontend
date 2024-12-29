@@ -9,7 +9,15 @@ const TimeTable = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Time Table</h1>
+      {/* Header Section with Underline */}
+      <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">
+        <h1 className="text-2xl font-normal">Time Table</h1>
+        <div className="flex gap-4">
+          <a href="/student" className="text-blue-600 hover:text-blue-800">Home</a>
+          <span className="text-gray-500">TimeTable</span>
+        </div>
+      </div>
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="min-w-full">
           <thead className="bg-gray-50">

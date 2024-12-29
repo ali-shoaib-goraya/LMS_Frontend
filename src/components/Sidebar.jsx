@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import HomeIcon from '@/assets/home.png';
 import UserGroupIcon from '@/assets/users.png';
 import AcademicCapIcon from '@/assets/academiccap.png';
-import ClipboardDocumentListIcon from '@/assets/clipboardlist.jpg';
+import ClipboardDocumentListIcon from '@/assets/clipboardlist.png';
 import ChartBarIcon from '@/assets/chartbar.png';
 import DocumentCheckIcon from '@/assets/documentcheck.png';
 import KeyIcon from '@/assets/key.png';

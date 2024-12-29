@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import UserIcon from '@/assets/user.png'; 
-import ShieldCheckIcon from '@/assets/shieldcheck.jpeg';
-import LockClosedIcon from '@/assets/lockclosed.jpeg';
+import ShieldCheckIcon from '@/assets/shieldcheck.png';
+import LockClosedIcon from '@/assets/lockclosed.png';
 
 const tabs = [
   { name: 'Users', path: 'users', icon: UserIcon },

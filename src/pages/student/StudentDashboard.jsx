@@ -64,10 +64,24 @@ const StudentDashboard = () => {
       >
         <div className="p-6 bg-gray-100 min-h-full">
           {showDashboardContent ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
+            <div>
+              <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">
+                <h1 className="text-3xl font-normal">Ongoing Courses</h1>
+                <div className="flex gap-4">
+                  <a
+                    href="/student"
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    Home
+                  </a>
+                  <span className="text-gray-500">Ongoing Courses</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
             </div>
           ) : (
             <Outlet />
