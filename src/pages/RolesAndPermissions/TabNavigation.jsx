@@ -1,5 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { UserIcon, ShieldCheckIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import UserIcon from '@/assets/user.png'; 
+import ShieldCheckIcon from '@/assets/shieldcheck.jpeg';
+import LockClosedIcon from '@/assets/lockclosed.jpeg';
 
 const tabs = [
   { name: 'Users', path: 'users', icon: UserIcon },
@@ -24,7 +26,7 @@ function TabNavigation() {
                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
             } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center`}
           >
-            <tab.icon className="h-5 w-5 mr-2" />
+            <img src={tab.icon} alt={`${tab.name} icon`} className="h-5 w-5 mr-2" />
             {tab.name}
           </Link>
         ))}

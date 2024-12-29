@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { PencilIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/outline';
 import { allRoles } from '../../../MockData/mockData';
 import RoleForm from './RoleForm';
+// import PencilIcon from '../../../../assets/pencil.png'; 
+import PencilIcon from '@/assets/pencil.png';
+import TrashIcon from '@/assets/trash.png';
+import LinkIcon from '@/assets/link.png'; 
 
 const RoleNames = allRoles.map((role) => role.name);
 
@@ -157,19 +160,19 @@ function RolesTab() {
                           onClick={() => handleEdit(role)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <PencilIcon className="h-5 w-5" />
+                          <img src={PencilIcon} alt="Edit" className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleChangeStatus(role.id)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <LinkIcon className="h-5 w-5" />
+                          <img src={LinkIcon} alt="Change Status" className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(role.id)}
                           className="text-red-400 hover:text-red-500"
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <img src={TrashIcon} alt="Delete" className="h-5 w-5" />
                         </button>
                       </div>
                     </td>
