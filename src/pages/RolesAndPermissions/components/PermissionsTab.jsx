@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { PencilIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/outline';
-import { allPermissions } from '../../../MockData/mockData'; // Ensure the path is correct
+import { allPermissions } from '../../../MockData/mockData'; 
 import PermissionForm from './PermissionFrom'; 
+import PencilIcon from '@/assets/pencil.png'; 
+import TrashIcon from '@/assets/trash.png'; 
+import LinkIcon from '@/assets/link.png'; 
+
 function PermissionsTab() {
   const [permissions, setPermissions] = useState(allPermissions);
   const [currentView, setCurrentView] = useState('list'); // 'list', 'create', or 'edit'
@@ -149,19 +152,19 @@ function PermissionsTab() {
                           onClick={() => handleEdit(permission)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <PencilIcon className="h-5 w-5" />
+                          <img src={PencilIcon} alt="Edit" className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleChangeStatus(permission.id)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <LinkIcon className="h-5 w-5" />
+                          <img src={LinkIcon} alt="Change Status" className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(permission.id)}
                           className="text-red-400 hover:text-red-500"
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <img src={TrashIcon} alt="Delete" className="h-5 w-5" />
                         </button>
                       </div>
                     </td>

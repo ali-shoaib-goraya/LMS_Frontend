@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import InputField from './InputField';
-import { validateLoginForm } from '../../utils/validation';
-import { handleLogin } from '../../utils/auth';
-
+import EyeIcon from '@/assets/eye.png';
+import EyeSlashIcon from '@/assets/eyeslash.png';
 
 function LoginForm({ userType = 'student' }) {
   const [formData, setFormData] = useState({
@@ -12,7 +10,6 @@ function LoginForm({ userType = 'student' }) {
     password: '',
     rememberMe: false,
   });
-  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,28 +20,31 @@ function LoginForm({ userType = 'student' }) {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrors({}); // Clear previous errors
 
     try {
-        console.log(formData);
-        await handleLogin(formData.username, formData.password);
-        navigate('/dashboard'); // Navigate to the dashboard on successful login
+      // Simulated login logic
+      const { username, password } = formData;
+      if (username === 'student' && password === 'password') {
+        // Redirect to student dashboard
+        navigate('/student');
+      } else if (username === 'admin' && password === 'password') {
+        // Redirect to admin dashboard
+        navigate('/dashboard');
+      } else {
+        // Invalid credentials
+        alert('Invalid credentials');
+      }
     } catch (error) {
-        // Handle errors from the login function
-        console.error('Login Error:', error.response?.data || error.message);
-        setErrors({ general: error.message || 'Login failed' });
+      alert('Login failed');
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -53,7 +53,6 @@ function LoginForm({ userType = 'student' }) {
         name="username"
         value={formData.username}
         onChange={handleChange}
-        error={errors.username}
       />
 
       <div className="relative">
@@ -63,7 +62,6 @@ function LoginForm({ userType = 'student' }) {
           type={showPassword ? 'text' : 'password'}
           value={formData.password}
           onChange={handleChange}
-          error={errors.password}
         />
         <button
           type="button"
@@ -71,16 +69,12 @@ function LoginForm({ userType = 'student' }) {
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? (
-            <EyeSlashIcon className="h-5 w-5" />
+            <img src={EyeSlashIcon} alt="Hide Password" className="h-5 w-5" />
           ) : (
-            <EyeIcon className="h-5 w-5" />
+            <img src={EyeIcon} alt="Show Password" className="h-5 w-5" />
           )}
         </button>
       </div>
-
-      {errors.general && (
-        <p className="text-sm text-red-500 text-center">{errors.general}</p>
-      )}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -134,4 +128,3 @@ function LoginForm({ userType = 'student' }) {
 }
 
 export default LoginForm;
-

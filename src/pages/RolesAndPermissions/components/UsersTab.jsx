@@ -1,33 +1,42 @@
 import { useState } from 'react';
-import { PencilIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/outline';
 import EditUserForm from './EditUserForm';  
 import { allUsers } from '../../../MockData/mockData';  
 import { allRoles } from '../../../MockData/mockData';
+// Import images for the action buttons
+import PencilIcon from '@/assets/pencil.png';
+import TrashIcon from '@/assets/trash.png';
+import LinkIcon from '@/assets/link.png';
 
+// Available roles for users
 const availableRoles = allRoles.map((role) => role.name);
 
 function UsersTab() {
+  // State hooks to manage users and the currently edited user
   const [users, setUsers] = useState(allUsers); // List of users
   const [editingUser, setEditingUser] = useState(null); // Track user being edited
 
+  // Function to handle editing a user
   const handleEdit = (user) => {
     setEditingUser(user);
-    
   };
 
+  // Function to save an updated user
   const handleSave = (updatedUser) => {
     setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
     setEditingUser(null); // Exit editing mode
   };
 
+  // Function to cancel editing
   const handleCancel = () => {
     setEditingUser(null); // Exit editing mode without saving
   };
 
+  // Function to delete a user
   const handleDelete = (userId) => {
     setUsers(users.filter((user) => user.id !== userId));
   };
 
+  // Function to change the status of a user (active/inactive)
   const handleChangeStatus = (userId) => {
     setUsers(
       users.map((user) =>
@@ -38,6 +47,7 @@ function UsersTab() {
     );
   };
 
+  // If a user is being edited, render the edit form
   if (editingUser) {
     return (
       <EditUserForm
@@ -49,6 +59,7 @@ function UsersTab() {
     );
   }
 
+  // Render the list of users when not in editing mode
   return (
     <div className="mt-8">
       <div className="sm:flex sm:items-center">
@@ -96,23 +107,26 @@ function UsersTab() {
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <div className="flex space-x-4">
+                        {/* Edit button */}
                         <button
                           onClick={() => handleEdit(user)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <PencilIcon className="h-5 w-5" />
+                          <img src={PencilIcon} alt="Edit" className="h-5 w-5" />
                         </button>
+                        {/* Change status button */}
                         <button
                           onClick={() => handleChangeStatus(user.id)}
                           className="text-gray-400 hover:text-gray-500"
                         >
-                          <LinkIcon className="h-5 w-5" />
+                          <img src={LinkIcon} alt="Change Status" className="h-5 w-5" />
                         </button>
+                        {/* Delete button */}
                         <button
                           onClick={() => handleDelete(user.id)}
                           className="text-red-400 hover:text-red-500"
                         >
-                          <TrashIcon className="h-5 w-5" />
+                          <img src={TrashIcon} alt="Delete" className="h-5 w-5" />
                         </button>
                       </div>
                     </td>
@@ -127,6 +141,4 @@ function UsersTab() {
   );
 }
 
-
 export default UsersTab;
-
