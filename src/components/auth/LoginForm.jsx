@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import InputField from './InputField';
 import { validateLoginForm } from '../../utils/validation';
+import { handleLogin } from '../../utils/auth';
+
 
 function LoginForm({ userType = 'student' }) {
   const [formData, setFormData] = useState({
@@ -29,22 +31,20 @@ function LoginForm({ userType = 'student' }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+    setErrors({}); // Clear previous errors
+
     try {
-      // Simulate login - replace with actual login logic
-      if (formData.username === 'admin' && formData.password === 'password') {
-        // Store auth token or user data in localStorage/context
-        localStorage.setItem('isAuthenticated', 'true');
-        navigate('/dashboard');
-      } else {
-        setErrors({ general: 'Invalid credentials' });
-      }
+        console.log(formData);
+        await handleLogin(formData.username, formData.password);
+        navigate('/dashboard'); // Navigate to the dashboard on successful login
     } catch (error) {
-      setErrors({ general: 'Login failed' });
+        // Handle errors from the login function
+        console.error('Login Error:', error.response?.data || error.message);
+        setErrors({ general: error.message || 'Login failed' });
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -134,3 +134,4 @@ function LoginForm({ userType = 'student' }) {
 }
 
 export default LoginForm;
+
