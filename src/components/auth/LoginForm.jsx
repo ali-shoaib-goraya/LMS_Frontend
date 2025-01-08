@@ -3,16 +3,27 @@ import { Link, useNavigate } from 'react-router-dom';
 import InputField from './InputField';
 import EyeIcon from '@/assets/eye.png';
 import EyeSlashIcon from '@/assets/eyeslash.png';
+import API from '../../api';
 
-function LoginForm({ userType = 'student' }) {
+function LoginForm({ userType }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     rememberMe: false,
   });
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Validate inputs
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.username) newErrors.username = 'Username is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -20,27 +31,29 @@ function LoginForm({ userType = 'student' }) {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+    setErrors((prev) => ({ ...prev, [name]: '' })); // Clear errors on input change
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    if (!validate()) return;
 
+    setIsLoading(true);
     try {
-      // Simulated login logic
-      const { username, password } = formData;
-      if (username === 'student' && password === 'password') {
-        // Redirect to student dashboard
-        navigate('/student');
-      } else if (username === 'admin' && password === 'password') {
-        // Redirect to admin dashboard
-        navigate('/dashboard');
-      } else {
-        // Invalid credentials
-        alert('Invalid credentials');
-      }
+      const { data } = await API.post('/auth/login', {
+        email: formData.username,
+        password: formData.password,
+        type: userType,
+      });
+
+      // Save tokens or user data in local storage
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+
+      // Redirect based on userType
+      navigate(userType === 'Student' ? '/student' : '/dashboard');
     } catch (error) {
-      alert('Login failed');
+      setErrors({ form: error.response?.data?.message || 'Login failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -48,11 +61,14 @@ function LoginForm({ userType = 'student' }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {errors.form && <div className="text-red-500 text-sm">{errors.form}</div>}
+
       <InputField
         label="Username"
         name="username"
         value={formData.username}
         onChange={handleChange}
+        error={errors.username}
       />
 
       <div className="relative">
@@ -62,6 +78,7 @@ function LoginForm({ userType = 'student' }) {
           type={showPassword ? 'text' : 'password'}
           value={formData.password}
           onChange={handleChange}
+          error={errors.password}
         />
         <button
           type="button"
@@ -108,7 +125,7 @@ function LoginForm({ userType = 'student' }) {
         {isLoading ? 'Signing in...' : 'Sign in'}
       </button>
 
-      {userType === 'student' ? (
+      {userType === 'Student' ? (
         <p className="text-sm text-gray-600 text-center">
           Are you a Faculty?{' '}
           <Link to="/faculty-login" className="text-primary-600 hover:text-primary-500">
