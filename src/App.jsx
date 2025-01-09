@@ -1,4 +1,3 @@
-// App.js
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AdminDashboard from './layouts/AdminDashboard';
@@ -12,6 +11,14 @@ import TimeTable from './pages/student/TimeTablePage';
 import AttendancePage from './pages/student/AttendancePage';
 import OBEPage from './pages/student/OBEPage';
 import MiscPage from './pages/student/MiscPage';
+import CampusForm from './pages/admin/Forms/CampusForm';
+import DepartmentForm from './pages/admin/Forms/DepartmentForm';
+import ProgramBatchForm from './pages/admin/Forms/ProgramBatchForm';
+import UserForm from './pages/admin/Forms/UsersForm';
+import SchoolForm from './pages/admin/Forms/SchoolForm';
+import ProgramForm from './pages/admin/Forms/ProgramForm';
+import SemesterForm from './pages/admin/Forms/SemesterForm';
+import CoursesForm from './pages/admin/Forms/CoursesForm';
 
 function App() {
   return (
@@ -35,6 +42,15 @@ function App() {
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
+          {/* Users Management Sub-Routes */}
+          <Route path="users/campus" element={<CampusForm />} />
+          <Route path="users/department" element={<DepartmentForm />} />
+          <Route path="users/program-batch" element={<ProgramBatchForm />} />
+          <Route path="users/user" element={<UserForm />} />
+          <Route path="users/school" element={<SchoolForm />} />
+          <Route path="users/program" element={<ProgramForm />} />
+          <Route path="users/semester" element={<SemesterForm />} />
+          <Route path="users/courses" element={<CoursesForm />} />
         </Route>
       </Routes>
     </Router>
