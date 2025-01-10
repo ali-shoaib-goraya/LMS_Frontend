@@ -25,7 +25,7 @@ function StudentLogin() {
         </div>
 
         <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
-          <LoginForm userType="student" />
+          <LoginForm userType="Student" />
         </div>
 
       </div>
