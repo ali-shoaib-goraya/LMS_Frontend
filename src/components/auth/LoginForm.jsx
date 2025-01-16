@@ -3,8 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import InputField from './InputField';
 import EyeIcon from '@/assets/eye.png';
 import EyeSlashIcon from '@/assets/eyeslash.png';
-import API from '../../api';
-
+import { useLoginMutation } from "../../app/api/authApiSlice";
 function LoginForm({ userType }) {
   const [formData, setFormData] = useState({
     username: '',
@@ -13,10 +12,10 @@ function LoginForm({ userType }) {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
-  // Validate inputs
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+
   const validate = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = 'Username is required';
@@ -31,31 +30,33 @@ function LoginForm({ userType }) {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
-    setErrors((prev) => ({ ...prev, [name]: '' })); // Clear errors on input change
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    setIsLoading(true);
     try {
-      const { data } = await API.post('/auth/login', {
+      const response = await login({
         email: formData.username,
         password: formData.password,
         type: userType,
-      });
+        rememberMe: formData.rememberMe,
+      }).unwrap();
 
-      // Save tokens or user data in local storage
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      if (response){
+      console.log ("Login Response", response);}
 
-      // Redirect based on userType
+      setFormData({ username: '', password: '', rememberMe: false });
       navigate(userType === 'Student' ? '/student' : '/dashboard');
-    } catch (error) {
-      setErrors({ form: error.response?.data?.message || 'Login failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      console.log("Backend Server Error",err);
+      const errorMessages = {
+        400: 'Missing Username or Password',
+        401: 'Unauthorized',
+      };
+      setErrors({ form: errorMessages[err.originalStatus] || 'Login Failed' });
     }
   };
 
@@ -85,11 +86,11 @@ function LoginForm({ userType }) {
           className="absolute right-3 top-8 text-gray-400 hover:text-gray-500"
           onClick={() => setShowPassword(!showPassword)}
         >
-          {showPassword ? (
-            <img src={EyeSlashIcon} alt="Hide Password" className="h-5 w-5" />
-          ) : (
-            <img src={EyeIcon} alt="Show Password" className="h-5 w-5" />
-          )}
+          <img
+            src={showPassword ? EyeSlashIcon : EyeIcon}
+            alt={showPassword ? 'Hide Password' : 'Show Password'}
+            className="h-5 w-5"
+          />
         </button>
       </div>
 

@@ -21,8 +21,8 @@ function AdminDashboard() {
         {isSidebarVisible && <Sidebar />}
 
         {/* Main Content */}
-        <main className={`flex-1 ${isSidebarVisible ? '' : ''} p-0`}>
-            <Outlet />
+        <main className="flex-1 p-4">
+          <Outlet /> {/* Dynamic content is rendered here */}
         </main>
       </div>
     </div>

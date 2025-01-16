@@ -1,8 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
+import { Navigate } from "react-router-dom";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const token = useSelector(selectCurrentToken);
+  const user = useSelector(selectCurrentUser);
+  // console.log('USER:', user);
+  // console.log("tOKEN:", token);
+  if (token && user?.Type === 'Faculty') {
+    return <Navigate to="/dashboard" />;
+  }
+
+  if (token && user?.Type === 'Student') {
+    return <Navigate to="/student" />;
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-800">
