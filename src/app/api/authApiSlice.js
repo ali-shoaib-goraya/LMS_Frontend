@@ -1,7 +1,7 @@
 import { apiSlice } from './apiSlice';
 import { setCredentials } from '../../features/auth/authSlice';
 import { saveToCookies, getFromCookies, deleteFromCookies } from '../../utils/cookies';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,7 +56,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           // Dispatch to auth slice
           dispatch(
             setCredentials({
-              user: decodeJWT(data.accessToken),
+              user: jwtDecode(data.accessToken),
               accessToken: data.accessToken,
             })
           );

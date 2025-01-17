@@ -12,6 +12,8 @@ const useAuthInit = () => {
   const initializeAuth = async () => {
     const accessToken = getFromCookies('accessToken');
     const refreshToken = getFromCookies('refreshToken');
+    console.log('accessToken:', accessToken);
+    console.log('refreshToken:', refreshToken);
 
     if (accessToken) {
       try {
@@ -29,6 +31,7 @@ const useAuthInit = () => {
               accessToken,
             })
           );
+
         } else if (refreshToken) {
           // Refresh the token
           await handleRefresh(refreshToken);
@@ -37,9 +40,11 @@ const useAuthInit = () => {
           dispatch(logOut());
         }
       } catch (err) {
-        console.error('Token validation failed:', err);
-        if (refreshToken) await handleRefresh(refreshToken);
-        else dispatch(logOut());
+        console.error('Error in useAuthInit:', err);
+        throw new Error('Exception Updating the state in useAuthInit:', exp);
+        
+        // if (refreshToken) await handleRefresh(refreshToken);
+        // else dispatch(logOut());
       }
     } else if (refreshToken) {
       // Refresh token exists but no access token

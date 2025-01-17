@@ -1,4 +1,3 @@
-// App.js
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AdminDashboard from './layouts/AdminDashboard';
@@ -20,13 +19,17 @@ import Settings from './pages/adminPages/Settings';
 import Grades from './pages/adminPages/Grades';
 import React, { useEffect } from 'react';
 import useAuthInit from './hooks/useAuthInit';
+import CampusForm from './pages/admin/Forms/CampusForm';
+import DepartmentForm from './pages/admin/Forms/DepartmentForm';
+import ProgramBatchForm from './pages/admin/Forms/ProgramBatchForm';
+import UserForm from './pages/admin/Forms/UsersForm';
+import SchoolForm from './pages/admin/Forms/SchoolForm';
+import ProgramForm from './pages/admin/Forms/ProgramForm';
+import SemesterForm from './pages/admin/Forms/SemesterForm';
+import CoursesForm from './pages/admin/Forms/CoursesForm';
 
 const App = () => {
-  const { initializeAuth } = useAuthInit();
 
-  useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
 
   return (
     <Router>
@@ -55,6 +58,15 @@ const App = () => {
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
           <Route path="grades" element={<Grades />} />
+          {/* Users Management Sub-Routes */}
+          <Route path="users/campus" element={<CampusForm />} />
+          <Route path="users/department" element={<DepartmentForm />} />
+          <Route path="users/program-batch" element={<ProgramBatchForm />} />
+          <Route path="users/user" element={<UserForm />} />
+          <Route path="users/school" element={<SchoolForm />} />
+          <Route path="users/program" element={<ProgramForm />} />
+          <Route path="users/semester" element={<SemesterForm />} />
+          <Route path="users/courses" element={<CoursesForm />} />
         </Route>
       </Routes>
     </Router>

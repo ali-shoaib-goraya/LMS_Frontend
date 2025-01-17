@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { deleteFromCookies } from '../../utils/cookies';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -12,6 +13,8 @@ const authSlice = createSlice({
     logOut: (state) => {
       state.user = null;
       state.accessToken = null;
+      deleteFromCookies('accessToken');
+      deleteFromCookies('refreshToken');
     },
   },
 });

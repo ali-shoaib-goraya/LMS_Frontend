@@ -4,9 +4,16 @@ import logo from '../assets/logo.png';
 import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-
+import useAuthInit from '../hooks/useAuthInit';
+import { useEffect } from 'react';
 
 function StudentLogin() {
+  const { initializeAuth } = useAuthInit();
+
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+  
   const token = useSelector(selectCurrentToken);
   const user = useSelector(selectCurrentUser);
   const navigate = useNavigate();

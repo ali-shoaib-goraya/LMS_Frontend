@@ -4,7 +4,13 @@ import InputField from './InputField';
 import EyeIcon from '@/assets/eye.png';
 import EyeSlashIcon from '@/assets/eyeslash.png';
 import { useLoginMutation } from "../../app/api/authApiSlice";
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../../features/auth/authSlice';
+import { saveToCookies } from '../../utils/cookies';
+import {jwtDecode} from 'jwt-decode';
+
 function LoginForm({ userType }) {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -46,7 +52,16 @@ function LoginForm({ userType }) {
       }).unwrap();
 
       if (response){
-      console.log ("Login Response", response);}
+        saveToCookies('accessToken', response.accessToken);
+        saveToCookies('refreshToken', response.refreshToken);
+        var decoded = jwtDecode(response.accessToken);
+        const user = {
+          UserId: decoded.UserId,
+          Email: decoded.Email,
+          Type: decoded.Type,
+        };
+        dispatch(setCredentials({ user: user, accessToken: response.accessToken }));
+        console.log ("Login Response", response);}
 
       setFormData({ username: '', password: '', rememberMe: false });
       navigate(userType === 'Student' ? '/student' : '/dashboard');

@@ -4,17 +4,27 @@ import Bars3Icon from '../assets/bars.png';
 import logo from '../assets/logo.png';
 import ProfileImage from '../assets/profile.jpg';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import { useDispatch } from 'react-redux';
+import { logOut } from '../features/auth/authSlice';  
+import { selectCurrentUser } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar({ onMenuClick, onSignOut, userName = "Ali Shoaib" }) {
+function Navbar({ onMenuClick}) {
+  const user = useSelector(selectCurrentUser); // Get the user object
+  const userName = user ? user.Email : "Guest"; // Fallback to "Guest" if user is null
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleSignOut = () => {
+    dispatch(logOut());
     setIsDropdownOpen(false);
-    onSignOut();
+    navigate("/faculty-login");
   };
 
   return (
@@ -70,7 +80,7 @@ function Navbar({ onMenuClick, onSignOut, userName = "Ali Shoaib" }) {
                     className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={() => alert("Profile clicked")}
                   >
-                    <FaUser className="mr-2" />
+                  <FaUser className="mr-2" />
                     Profile
                   </button>
                   <button
@@ -90,4 +100,4 @@ function Navbar({ onMenuClick, onSignOut, userName = "Ali Shoaib" }) {
   );
 }
 
-export default Navbar;
+  export default Navbar;
