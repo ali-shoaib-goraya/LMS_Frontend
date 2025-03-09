@@ -26,7 +26,16 @@ const navigation = [
     ],
   },
   { name: 'Roles & Permissions', href: '/dashboard/roles-permissions', icon: KeyIcon },
-  { name: 'Academic Structure', href: '/dashboard/academic', icon: AcademicCapIcon },
+  { name: 'Academic Structure', icon: AcademicCapIcon, 
+    panel: [
+      { name: 'Students Table', href: '/dashboard/academic/students' },
+      { name: 'Faculty Table', href: '/dashboard/academic/faculty' },
+      { name: 'Courses Table', href: '/dashboard/academic/courses' },
+      { name: 'Add Program Batch', href: '/dashboard/academic/program-batch' },
+      { name: 'Add Department', href: '/dashboard/academic/department' },
+    ],
+
+  },
   { name: 'Course Management', href: '/dashboard/courses', icon: ClipboardDocumentListIcon },
   { name: 'Grades', href: '/dashboard/grades', icon: DocumentCheckIcon },
   { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon },

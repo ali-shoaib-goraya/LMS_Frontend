@@ -19,6 +19,11 @@ import SchoolForm from './pages/admin/Forms/SchoolForm';
 import ProgramForm from './pages/admin/Forms/ProgramForm';
 import SemesterForm from './pages/admin/Forms/SemesterForm';
 import CoursesForm from './pages/admin/Forms/CoursesForm';
+import StudentsTable from './pages/admin/tables/StudentsTable';
+import FacultyTable from './pages/admin/tables/FacultyTable';
+import AttendanceTable from './pages/admin/tables/AttendanceTable';
+import CourseSections from './pages/admin/tables/CourseSections';
+// import AddClassActivity from './pages/admin/Forms/ActivityForm';
 
 function App() {
   return (
@@ -42,6 +47,7 @@ function App() {
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
+          
           {/* Users Management Sub-Routes */}
           <Route path="users/campus" element={<CampusForm />} />
           <Route path="users/department" element={<DepartmentForm />} />
@@ -51,6 +57,13 @@ function App() {
           <Route path="users/program" element={<ProgramForm />} />
           <Route path="users/semester" element={<SemesterForm />} />
           <Route path="users/courses" element={<CoursesForm />} />
+          
+          {/* Academic Structure Sub-Routes */}
+          <Route path="academic/students" element={<StudentsTable />} />
+          <Route path="academic/faculty" element={<FacultyTable />} />
+          <Route path="academic/students/attendance" element={<AttendanceTable />} />
+          {/* <Route path="academic/students/activities" element={<AddClassActivity />} /> */}
+          <Route path="academic/courses" element={<CourseSections />} />
         </Route>
       </Routes>
     </Router>
