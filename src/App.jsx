@@ -11,6 +11,14 @@ import TimeTable from './pages/student/TimeTablePage';
 import AttendancePage from './pages/student/AttendancePage';
 import OBEPage from './pages/student/OBEPage';
 import MiscPage from './pages/student/MiscPage';
+import Courses from './pages/adminPages/Courses'; 
+import Users from './pages/adminPages/Users';
+import Acadmia from './pages/adminPages/Acadmia'; 
+import Reports from './pages/adminPages/Reports';
+import Settings from './pages/adminPages/Settings';
+import Grades from './pages/adminPages/Grades';
+import React, { useEffect } from 'react';
+import useAuthInit from './hooks/useAuthInit';
 import CampusForm from './pages/admin/Forms/CampusForm';
 import DepartmentForm from './pages/admin/Forms/DepartmentForm';
 import ProgramBatchForm from './pages/admin/Forms/ProgramBatchForm';
@@ -25,7 +33,9 @@ import AttendanceTable from './pages/admin/tables/AttendanceTable';
 import CourseSections from './pages/admin/tables/CourseSections';
 // import AddClassActivity from './pages/admin/Forms/ActivityForm';
 
-function App() {
+const App = () => {
+
+
   return (
     <Router>
       <Routes>
@@ -47,7 +57,16 @@ function App() {
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route index element={<DashboardHome />} />
           <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
+<<<<<<< HEAD
           
+=======
+          <Route path="courses" element={<Courses />} />
+          <Route path="users" element={<Users />} />
+          <Route path="academic" element={<Acadmia />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="grades" element={<Grades />} />
+>>>>>>> origin/main
           {/* Users Management Sub-Routes */}
           <Route path="users/campus" element={<CampusForm />} />
           <Route path="users/department" element={<DepartmentForm />} />
@@ -71,3 +90,4 @@ function App() {
 }
 
 export default App;
+

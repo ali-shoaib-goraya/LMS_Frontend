@@ -1,8 +1,30 @@
 import { Link } from 'react-router-dom';
 import LoginForm from '../components/auth/LoginForm';
 import logo from '../assets/logo.png'; 
+import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import useAuthInit from '../hooks/useAuthInit';
+import { useEffect } from 'react';
 
 function FacultyLogin() {
+  const { initializeAuth } = useAuthInit();
+  
+    useEffect(() => {
+      initializeAuth();
+    }, []);
+  
+  const token = useSelector(selectCurrentToken);
+  const user = useSelector(selectCurrentUser);
+
+  if (token && user?.Type === 'Faculty') {
+    return <Navigate to="/dashboard" />;
+  }
+
+  if (token && user?.Type === 'Student') {
+    return <Navigate to="/student" />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center">
       <div className="w-full max-w-md space-y-6">

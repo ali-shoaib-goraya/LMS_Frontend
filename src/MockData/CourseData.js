@@ -56,7 +56,7 @@ export const sampleCourses = [
     instructorName: "Muhammad Shahzad Arif",
   },
   {
-    id: 7 ,
+    id: 8 ,
     code: "CS-450",
     title: "Computer Networks",
     semester: "Semester-7-CS-450",
