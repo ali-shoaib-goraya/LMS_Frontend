@@ -101,7 +101,7 @@ const UserForm = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto font-sans">
+    <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
       <div className="bg-white border border-gray-300 rounded-md p-6 shadow-md">
         <form onSubmit={handleSubmit}>
 
@@ -489,7 +489,7 @@ const UserForm = () => {
                 name="otherdepartment"
                 value={formData.otherdepartment}
                 onChange={handleInputChange}
-                className={`w-full borotherder ${
+                className={`w-full border ${
                   isSubmitted && !formData.otherdepartment
                     ? "border-red-500"
                     : "border-gray-300"
@@ -498,24 +498,13 @@ const UserForm = () => {
               />
             </div>
 
-          {/* Checkbox and Save */}
+          {/*Save */}
           <div className="flex flex-col items-start mt-6 justify-start">
-            <div className="flex items-center mb-4">
-              <input
-                type="checkbox"
-                name="isPhD"
-                checked={formData.isPhD}
-                onChange={handleCheckboxChange}
-                className="mr-2"
-              />
-              <label className="text-sm text-gray-600">Is PhD?</label>
-            </div>
 
             <div className="text-left">
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-md"
-              >
+                className="bg-green-500 text-white px-6 py-2 rounded-md shadow hover:bg-green-600">
                 Save
               </button>
             </div>
@@ -527,3 +516,4 @@ const UserForm = () => {
 };
 
 export default UserForm;
+

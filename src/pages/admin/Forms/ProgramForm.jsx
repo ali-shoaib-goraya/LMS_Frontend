@@ -88,7 +88,7 @@ const ProgramForm = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto font-sans">
+<div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
       {/* First Row */}
       <div className="bg-white border border-gray-300 rounded-md p-6 shadow-md">
         <form onSubmit={handleSubmit}>
@@ -391,7 +391,7 @@ const ProgramForm = () => {
           <div>
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md"
+              className="bg-green-500 text-white px-6 py-2 rounded-md shadow hover:bg-green-600"
             >
               Save
             </button>

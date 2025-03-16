@@ -79,7 +79,7 @@ function CoursesForm() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
+    <div className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-lg shadow-lg border border-gray-200 landscape">
       <form onSubmit={handleSubmit}>
         {/* Global Error Message */}
         {isSubmitted && Object.values(formData).some((value) => value === "") && (

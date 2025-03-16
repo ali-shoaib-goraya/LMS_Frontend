@@ -94,11 +94,6 @@ const ProgramForm = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-lg shadow-lg border border-gray-200">
-      {/* Title Section */}
-      <div className="mb-8 border-b-2 pb-4">
-        <h2 className="text-2xl text-gray-800">Create Program Batch</h2>
-      </div>
-
       {/* Form Section */}
       <div className="bg-white border border-gray-300 rounded-md p-6 shadow-md">
         <form onSubmit={handleSubmit}>
@@ -460,7 +455,7 @@ const ProgramForm = () => {
           <div>
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md"
+              className="bg-green-500 text-white px-6 py-2 rounded-md shadow hover:bg-green-600"
             >
               Save
             </button>

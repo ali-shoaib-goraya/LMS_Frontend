@@ -32,10 +32,6 @@ const CampusForm = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-lg shadow-lg border border-gray-200 landscape">
-      {/* Title Section with Border Below */}
-      <div className="mb-8 border-b-2 pb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Create Your Form</h2>
-      </div>
 
       {/* Form Section */}
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -129,7 +125,7 @@ const CampusForm = () => {
           <div className="flex justify-start">
             <button
               type="submit"
-              className="py-3 px-6 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-600 focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+              className="bg-green-500 text-white px-6 py-2 rounded-md shadow hover:bg-green-600"
             >
               Submit
             </button>

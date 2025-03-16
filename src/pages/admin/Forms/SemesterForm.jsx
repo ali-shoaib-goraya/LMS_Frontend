@@ -79,11 +79,7 @@ const SemesterForm = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg">
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-2">Create Semester</h2>
-        <hr className="border-t-2 border-gray-300 mb-4" />
-      </div>
+    <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
       <form onSubmit={handleSubmit}>
         {/* Academic Year, Name, GPA Round Method */}
         <div className="grid grid-cols-3 gap-5">
