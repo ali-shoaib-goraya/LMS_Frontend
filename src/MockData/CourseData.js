@@ -1,11 +1,11 @@
 export const sampleCourses = [
   {
     id: 1,
-    code: "CS-420",
-    title: "Parallel and Distributed Systems",
-    semester: "Semester-7-CS-420",
-    term: "Fall 2024",
-    instructorName: "Muhammad Shahzad Arif",
+    code: "SS-112",
+    title: "introduction to Psychology",
+    semester: "Semester-8-SS-112",
+    term: "Spring 2025",
+    instructorName: "Komal Zafar",
   },
   {
     id: 2,

@@ -34,9 +34,10 @@ const navigation = [
       { name: 'Manage Program Batch ', href: '/dashboard/academic/program-batch' },
       { name: 'Manage Department', href: '/dashboard/academic/department' },
       { name: 'Manage Semester', href: '/dashboard/academic/semester' },
-      { name: 'Manage Courses', href: '/dashboard/academic/courses' },
+      { name: 'Manage Course Sections', href: '/dashboard/academic/course-section' },
       { name: 'Manage Faculty ', href: '/dashboard/academic/faculty' },
       { name: 'Manage Students', href: '/dashboard/academic/students' },
+      { name: 'Manage Courses', href: '/dashboard/academic/courses' },
     ],
 
   },

@@ -1,29 +1,32 @@
 import React, { useState } from "react";
-import { mockCourses } from "../../../MockData/mockCourses";
-import CoursesSectionForm from "../Forms/CoursesSectionForm";
-import SelectSemester from "../Forms/BulkCourses1"; // Importing Bulk Courses Form
+import { mockCourses2 } from "../../../MockData/mockCourses2";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
+import CoursesForm from "../Forms/CourseForm";
 
-const CourseSections = () => {
-  const [courses] = useState(mockCourses);
+const CoursesTable = () => {
+  const [courses] = useState(mockCourses2);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [showBulkForm, setShowBulkForm] = useState(false); // New State for Bulk Form
-
+  const [showBulkForm, setShowBulkForm] = useState(false);
   const [filters, setFilters] = useState({
-    name: "",
-    course: "",
-    semester: "",
-    school: "",
-    teacher: "",
-    department: "",
-    section: "",
+    courseId: "",
+    courseName: "",
+    courseCode: "",
+    creditHours: "",
+    isLab: "",
+    isCompulsory: "",
+    isTheory: "",
+    connectedCourseId: "",
+    objective: "",
+    notes: "",
+    departmentId: "",
   });
 
-  const itemsPerPage = 20;
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Handle checkbox selection
   const handleCheckboxChange = (id) => {
     setSelectedCourses((prevSelected) =>
       prevSelected.includes(id)
@@ -32,10 +35,12 @@ const CourseSections = () => {
     );
   };
 
+  // Handle filter change
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
   };
 
+  // Filtering courses based on search input
   const filteredCourses = courses.filter((course) =>
     Object.keys(filters).every((key) =>
       filters[key]
@@ -53,17 +58,15 @@ const CourseSections = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
       {/* Title Section */}
-      <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Course Sections</h2>
+      <div className="w-full max-w-7xl bg-white p-4 shadow-md rounded-md mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">Course Details</h2>
       </div>
 
       {/* Conditional Rendering for Forms */}
       {showForm ? (
-        <CoursesSectionForm onBack={() => setShowForm(false)} />
-      ) : showBulkForm ? (
-        <SelectSemester onBack={() => setShowBulkForm(false)} />
+        <CoursesForm onBack={() => setShowForm(false)} />
       ) : (
-        <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg overflow-x-auto">
+        <div className="w-full max-w-7xl bg-white p-6 shadow-lg rounded-lg overflow-x-auto">
           {/* Table Info */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
@@ -74,24 +77,18 @@ const CourseSections = () => {
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 onClick={() => setShowForm(true)}
               >
-                Create Course Sections
-              </button>
-              <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                onClick={() => setShowBulkForm(true)} // Opens Bulk Form
-              >
-                Add Courses in Bulk
+                Add Course
               </button>
             </div>
           </div>
 
           {/* Table */}
           <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-white">
+            <thead className="bg-gray-100">
               <tr className="text-left border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
                 <th className="border border-gray-300 px-4 py-3">Select</th>
-                {["name", "course", "semester", "school", "teacher", "department", "section"].map((key) => (
+                {["courseId", "courseName", "courseCode", "creditHours", "isLab", "isCompulsory", "isTheory", "connectedCourseId", "departmentId"].map((key) => (
                   <th key={key} className="border border-gray-300 px-4 py-3">
                     {key.charAt(0).toUpperCase() + key.slice(1)}
                     <input
@@ -99,6 +96,7 @@ const CourseSections = () => {
                       value={filters[key]}
                       onChange={(e) => handleFilterChange(e, key)}
                       className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                      placeholder={`Search ${key}`}
                     />
                   </th>
                 ))}
@@ -108,21 +106,21 @@ const CourseSections = () => {
             <tbody>
               {currentCourses.length > 0 ? (
                 currentCourses.map((course, index) => (
-                  <tr key={course.id} className="text-center hover:bg-gray-100 transition">
+                  <tr key={index} className="text-center hover:bg-gray-100 transition">
                     <td className="border border-gray-300 px-4 py-3">{startIndex + index + 1}</td>
                     <td className="border border-gray-300 px-4 py-3">
                       <input
                         type="checkbox"
-                        checked={selectedCourses.includes(course.id)}
-                        onChange={() => handleCheckboxChange(course.id)}
+                        checked={selectedCourses.includes(course.courseId)}
+                        onChange={() => handleCheckboxChange(course.courseId)}
                         className="cursor-pointer w-4 h-4"
                       />
                     </td>
-                    {["name", "course", "semester", "school", "teacher", "department", "section"].map((key) => (
-                      <td key={key} className="border border-gray-300 px-4 py-3">{course[key]}</td>
+                    {["courseId", "courseName", "courseCode", "creditHours", "isLab", "isCompulsory", "isTheory", "connectedCourseId", "departmentId"].map((key) => (
+                      <td key={key} className="border border-gray-300 px-4 py-3">{course[key]?.toString()}</td>
                     ))}
                     <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
-                      <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
+                      <button className="hover:opacity-80">
                         <img src={editIcon} alt="Edit" className="w-5 h-5" />
                       </button>
                       <button className="hover:opacity-80">
@@ -133,7 +131,7 @@ const CourseSections = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9" className="text-center text-gray-600 py-4">
+                  <td colSpan="13" className="text-center text-gray-600 py-4">
                     No courses found.
                   </td>
                 </tr>
@@ -142,7 +140,7 @@ const CourseSections = () => {
           </table>
 
           {/* Pagination */}
-          <div className="flex justify-start mt-4">
+          <div className="flex justify-center mt-4">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
@@ -175,4 +173,4 @@ const CourseSections = () => {
   );
 };
 
-export default CourseSections;
+export default CoursesTable;
