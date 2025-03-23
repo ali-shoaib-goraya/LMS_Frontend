@@ -28,6 +28,15 @@ const mockActivities = [
       question: "N/A",
       obeWeight: 0.0,
       clo: "N/A"
+    },
+    {
+      date: "24-02-2025",
+      name: "Assignemnt No 1",
+      type: "Assignment",
+      totalMarks: 10,
+      obtainedMarks: "N/A",
+      obeWeight: 0.0,
+      clo: "N/A"
     }
   ];
   
