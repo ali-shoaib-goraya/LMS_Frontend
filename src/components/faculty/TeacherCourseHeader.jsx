@@ -1,16 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const CourseHeader = ({ course }) => {
+const TeacherCourseHeader = ({ course }) => {
   return (
     <div>
       {/* Course Section Header with Breadcrumbs */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold text-gray-800">Course Section</h2>
         <div className="text-gray-600 text-sm flex gap-2">
-          <Link to="/student" className="text-purple-700 hover:underline">Home</Link>
+          <Link to="/teacher" className="text-purple-700 hover:underline">Home</Link>
           <span>/</span>
-          <Link to="/student/courses" className="text-purple-700 hover:underline">My Courses</Link>
+          <Link to="/teacher/courses" className="text-purple-700 hover:underline">Course Sections</Link>
           <span>/</span>
           <span className="text-gray-700">{course.semester}-{course.code}-{course.term}</span>
         </div>
@@ -36,4 +36,4 @@ const CourseHeader = ({ course }) => {
   );
 };
 
-export default CourseHeader;
+export default TeacherCourseHeader;

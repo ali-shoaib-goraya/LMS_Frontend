@@ -40,6 +40,9 @@ import SchoolTable from './pages/admin/tables/SchoolTable';
 import CoursesTable from './pages/admin/tables/CoursesTable';
 // import AddClassActivity from './pages/admin/Forms/ActivityForm';
 
+import TeacherDashboard from './pages/faculty/TeacherDashboard';
+import TeacherCourseDetails from './pages/faculty/TeacherCourseDetails';
+
 const App = () => {
   return (
     <Router>
@@ -48,6 +51,11 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/student-login" element={<StudentLogin />} />
         <Route path="/faculty-login" element={<FacultyLogin />} />
+
+        {/* Teacher Routes */}
+        <Route path="/teacher" element={<TeacherDashboard />} >
+        <Route path="/teacher/coursedetail" element={<TeacherCourseDetails />} />
+        </Route>
 
         {/* Student Routes */}
         <Route path="/student" element={<StudentDashboard />}>

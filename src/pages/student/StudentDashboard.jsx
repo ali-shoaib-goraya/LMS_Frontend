@@ -1,4 +1,3 @@
-// pages/student/StudentDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import CourseCard from '../../components/student/CourseCard';
@@ -58,9 +57,7 @@ const StudentDashboard = () => {
 
       {/* Main Content Area */}
       <div
-        className={`flex-1 mt-16 ${
-          isSidebarVisible ? 'ml-44' : 'ml-0'
-        } overflow-y-auto`}
+        className={`flex-1 mt-16 ${isSidebarVisible ? 'ml-44' : 'ml-0'} overflow-y-auto`}
       >
         <div className="p-6 bg-gray-100 min-h-full">
           {showDashboardContent ? (
