@@ -4,12 +4,10 @@ import TeacherCourseHeader from "../../components/faculty/TeacherCourseHeader";
 import TeacherTakeAttendance from "./TeacherTakeAttendance";
 import ClassActivities from "./ClassActivities";
 import AttendanceRegister from "./AttendanceRegister";
-import Report1 from "./Report1";
-import Report2 from "./Report2";
-import Report3 from "./Report3";
-import Config1 from "./config1";
-import Config2 from "./config2";
-import Config3 from "./config3";
+import AwardList from "./AwardList";
+import VideoMaterial from "./VideoMaterial";
+import ActivityWeights from "./ActivityWeights";
+import CourseAttachment from "./CourseAttachment";
 
 const TeacherCourseDetails = () => {
   const location = useLocation();
@@ -18,8 +16,8 @@ const TeacherCourseDetails = () => {
   const tabsConfig = {
     View: [],
     Activities: ["Class Activites", "Attendance Register"],
-    Reports: ["Report 1", "Report 2", "Report 3"],
-    Configuration: ["Config 1", "Config 2", "Config 3"],
+    Reports: ["Award List"],
+    Configuration: ["Video Material", "Activity Weights", "Course Attachment"],
     TakeAttendance: null,
   };
 
@@ -63,31 +61,28 @@ const TeacherCourseDetails = () => {
       case "Activities":
         switch (selectedItems.Activities) {
           case "Class Activites":
-            return <ClassActivities course={course} />;
+            return <ClassActivities />;
           case "Attendance Register":
-            return <AttendanceRegister course={course} />;
+            return <AttendanceRegister />;
           default:
             return null;
         }
       case "Reports":
         switch (selectedItems.Reports) {
-          case "Report 1":
-            return <Report1 />;
-          case "Report 2":
-            return <Report2 />;
-          case "Report 3":
-            return <Report3 />;
+          case "Award List":
+            return <AwardList course ={course}/>;
           default:
             return null;
         }
       case "Configuration":
         switch (selectedItems.Configuration) {
-          case "Config 1":
-            return <Config1 />;
-          case "Config 2":
-            return <Config2 />;
-          case "Config 3":
-            return <Config3 />;
+          case "Video Material":
+            return <VideoMaterial />;
+          case "Activity Weights":
+            return <ActivityWeights />;
+            case "Course Attachment":
+              return <CourseAttachment/>;
+
           default:
             return null;
         }
@@ -216,7 +211,7 @@ const TeacherCourseDetails = () => {
 
         {activeTab === "TakeAttendance" && (
           <div className="mt-4 text-gray-700">
-            <TeacherTakeAttendance coursecode={course.code} />
+            <TeacherTakeAttendance/>
           </div>
         )}
 

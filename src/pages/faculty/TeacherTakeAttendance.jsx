@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import mockStudents from "../../MockData/mockregisteredstudents";
+import attendanceData from "../../MockData/mockAttendanceRegister"; // Importing attendanceData
 
-const TeacherTakeAttendance = ({ coursecode }) => {
-  const registeredStudents = mockStudents.filter((student) =>
-    student.courses.includes(coursecode)
-  );
-
+const TeacherTakeAttendance = () => {
+  // Initialize attendance state with all checkboxes checked by default (true = present)
   const [attendance, setAttendance] = useState(
-    registeredStudents.reduce((acc, student) => {
-      acc[student.regNo] = true; // All checkboxes initially checked
+    attendanceData.students.reduce((acc, student) => {
+      acc[student.regNo] = true; // All checkboxes checked by default (true)
       return acc;
     }, {})
   );
@@ -16,7 +13,7 @@ const TeacherTakeAttendance = ({ coursecode }) => {
   const handleCheckboxChange = (regNo) => {
     setAttendance((prev) => ({
       ...prev,
-      [regNo]: !prev[regNo],
+      [regNo]: !prev[regNo], // Toggle attendance between present and absent
     }));
   };
 
@@ -47,8 +44,8 @@ const TeacherTakeAttendance = ({ coursecode }) => {
     <div className="w-full">
       <h2 className="text-xl font-semibold mb-6">Take Attendance</h2>
 
-{/* Input Grid */}
-<div className="grid grid-cols-4 gap-4 mb-6">
+      {/* Input Grid */}
+      <div className="grid grid-cols-4 gap-4 mb-6">
         {/* Row 1 */}
         <div className="col-span-2">
           <label className="block mb-1">Lecture Name</label>
@@ -91,8 +88,9 @@ const TeacherTakeAttendance = ({ coursecode }) => {
           <input type="text" className="px-4 py-2 border rounded w-full" />
         </div>
       </div>
+
       {/* Attendance Table */}
-      {registeredStudents.length > 0 ? (
+      {attendanceData.students.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto">
             <thead>
@@ -105,19 +103,17 @@ const TeacherTakeAttendance = ({ coursecode }) => {
               </tr>
             </thead>
             <tbody>
-              {registeredStudents.map((student, index) => (
+              {attendanceData.students.map((student, index) => (
                 <tr key={student.regNo} className="border-b hover:bg-gray-50">
                   <td className="px-4 py-3 text-gray-600">{index + 1}</td>
                   <td className="px-4 py-3">
                     <div
-                      className={`w-10 h-10 rounded-full ${
-                        colors[index % colors.length]
-                      } flex items-center justify-center text-white font-medium`}
+                      className={`w-10 h-10 rounded-full ${colors[index % colors.length]} flex items-center justify-center text-white font-medium`}
                     >
                       {getInitials(student.name)}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{`NUM-BSCS-2024-0${index + 1}`}</td>
+                  <td className="px-4 py-3 text-gray-600">{student.regNo}</td>
                   <td className="px-4 py-3 text-gray-600">{student.name}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-center">
