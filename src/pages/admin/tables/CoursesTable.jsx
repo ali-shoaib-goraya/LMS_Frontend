@@ -140,7 +140,7 @@ const CoursesTable = () => {
           </table>
 
           {/* Pagination */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-start mt-4">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}

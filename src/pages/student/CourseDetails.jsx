@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import CourseHeader from "../../components/student/CourseHeader";
-import OBE from "./OBE";
 import DiscussionForum from "./DiscussionForum";
 import TimeTable from "./CourseTimeTable";
 import Activities from "./Activities";
 import VideoResource from "./VideoResource";
 import OtherResource from "./OtherResources";
-import TeachingPlanResource from "./TeachingPlanResource";
 
 const CourseDetails = () => {
   const location = useLocation();
@@ -46,7 +44,7 @@ const CourseDetails = () => {
         <div className="relative">
           <button
             className={`py-2 px-3 ${
-              ["Video Material", "Section Teaching Plan", "Other Resources"].includes(activeTab)
+              ["Video Material", "Other Resources"].includes(activeTab)
                 ? "border-b-2 border-purple-700 text-purple-700 font-medium"
                 : "hover:text-purple-700"
             }`}
@@ -58,7 +56,7 @@ const CourseDetails = () => {
           {/* Dropdown Menu - Shows when clicking Resources */}
           {showDropdown && (
             <div className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-lg w-48 z-10">
-              {["Video Material", "Section Teaching Plan", "Other Resources"].map((resource) => (
+              {["Video Material", "Other Resources"].map((resource) => (
                 <button
                   key={resource}
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -75,7 +73,7 @@ const CourseDetails = () => {
         </div>
 
         {/* Remaining Tabs */}
-        {["Time Table", "OBE", "Discussion Forums"].map((tab) => (
+        {["Time Table", "Discussion Forums"].map((tab) => (
           <button
             key={tab}
             className={`py-2 px-3 ${
@@ -113,11 +111,9 @@ const CourseDetails = () => {
           </div>
         )}
 
-        {activeTab === "OBE" && <OBE />}
         {activeTab === "Discussion Forums" && <DiscussionForum />}
         {activeTab === "Time Table" && <TimeTable />}
         {activeTab === "Video Material" && <VideoResource />}
-        {activeTab === "Section Teaching Plan" && <TeachingPlanResource />}
         {activeTab === "Other Resources" && <OtherResource />}
       </div>
     </div>

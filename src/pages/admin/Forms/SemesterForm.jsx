@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SemesterForm = () => {
+const SemesterForm = ({onBack}) => {
   const [formData, setFormData] = useState({
     academicYear: "",
     name: "",
@@ -234,14 +234,14 @@ const SemesterForm = () => {
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="flex justify-start mt-6">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-          >
-            Save
-          </button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+              Submit
+            </button>
+            <button type="button" onClick={onBack} className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+              Cancel
+            </button>
         </div>
       </form>
     </div>

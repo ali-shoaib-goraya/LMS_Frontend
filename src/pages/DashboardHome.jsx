@@ -75,7 +75,7 @@ const DashboardHome = () => {
       </div>
 
       {/* Main Content */}
-      <div className="pt-20 px-6">
+      <div className="pt-6 px-6">
         {showDashboardContent ? (
           <div className="max-w-7xl mx-auto">
             {/* Header */}

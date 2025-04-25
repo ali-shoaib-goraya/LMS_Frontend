@@ -61,21 +61,48 @@ const HomePage = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-primary-700 mb-8">Why Choose Our LMS?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-white shadow-md rounded-lg">
-              <img src="https://images.unsplash.com/photo-1584697964359-f19234c65529?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Feature 1" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800">Streamlined Learning</h3>
-              <p className="text-gray-600 mt-2">Access all your learning resources in one place.</p>
-            </div>
-            <div className="p-6 bg-white shadow-md rounded-lg">
-              <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Feature 2" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800">Collaboration Tools</h3>
-              <p className="text-gray-600 mt-2">Work together with peers and instructors seamlessly.</p>
-            </div>
-            <div className="p-6 bg-white shadow-md rounded-lg">
-              <img src="https://images.unsplash.com/photo-1555431189-0fabf7145274?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Feature 3" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800">Performance Tracking</h3>
-              <p className="text-gray-600 mt-2">Monitor your progress and achieve your goals.</p>
-            </div>
+          <div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Course Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Course Management</h3>
+  <p className="text-gray-600 mt-2">Create, update, and manage courses seamlessly for all academic levels.</p>
+</div>
+
+<div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Timetable Generation" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Timetable Generation</h3>
+  <p className="text-gray-600 mt-2">Automatically generate class and lab schedules to save time and avoid clashes.</p>
+</div>
+
+<div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Attendance Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Attendance Management</h3>
+  <p className="text-gray-600 mt-2">Track student attendance lab-wise with smart summaries and totals.</p>
+</div>
+
+<div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Progress Tracking" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Progress Tracking</h3>
+  <p className="text-gray-600 mt-2">Monitor student performance and visualize academic growth over time.</p>
+</div>
+
+<div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Collaboration Tools" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Faculty & Student Collaboration</h3>
+  <p className="text-gray-600 mt-2">Enable smooth communication between faculty and students for better learning.</p>
+</div>
+
+{/* <div className="p-6 bg-white shadow-md rounded-lg">
+  <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" 
+    alt="Accreditation Compliance" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+  <h3 className="text-xl font-semibold text-gray-800">Student Progress Tracking</h3>
+  <p className="text-gray-600 mt-2">Track student performance and outcomes over time with visual dashboards.</p>
+</div> */}
+
           </div>
         </div>
       </section>

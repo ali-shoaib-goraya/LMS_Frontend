@@ -28,7 +28,6 @@ const navigation = [
       { name: 'Manage Students', href: '/dashboard/academic/students' },
       { name: 'Manage Courses', href: '/dashboard/academic/courses' },
     ],
-
   },
   { name: 'Course Management', href: '/dashboard/courses', icon: ClipboardDocumentListIcon },
   { name: 'Grades', href: '/dashboard/grades', icon: DocumentCheckIcon },
@@ -67,10 +66,10 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex pt-20">
+    <div className="flex p-0 m-0">
       {/* Main Sidebar */}
       <div
-        className="w-48 bg-white border-r border-gray-200 h-[calc(100vh-80px)] fixed top-20 flex flex-col z-10"
+        className="w-48 bg-white border-r border-gray-200 h-[calc(100vh-80px)] fixed left-0 top-20 flex flex-col z-10"
         onMouseLeave={handleMouseLeave}
       >
         <div className="flex-1 overflow-y-auto pt-4">
@@ -133,7 +132,7 @@ function Sidebar() {
                   <li key={subItem.name}>
                     <Link
                       to={subItem.href}
-                      onClick={handleSubItemClick} // Close sub-sidebar on link click
+                      onClick={handleSubItemClick} 
                       className={`block w-full text-left px-4 py-2 rounded-lg transition-colors ${
                         location.pathname === subItem.href
                           ? 'bg-primary-50 text-primary-700'

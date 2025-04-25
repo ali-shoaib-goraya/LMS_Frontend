@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UserForm = () => {
+const UserForm = ({onBack}) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -498,17 +498,15 @@ const UserForm = () => {
               />
             </div>
 
-          {/*Save */}
-          <div className="flex flex-col items-start mt-6 justify-start">
-
-            <div className="text-left">
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-6 py-2 rounded-md shadow hover:bg-green-600">
-                Save
-              </button>
+          {/* Buttons */}
+          <div className="flex gap-4 mt-6">
+            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+              Submit
+            </button>
+            <button type="button" onClick={onBack} className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+              Cancel
+            </button>
             </div>
-          </div>
         </form>
       </div>
     </div>

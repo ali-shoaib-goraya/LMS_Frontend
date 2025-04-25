@@ -4,12 +4,23 @@ import CourseCard from '../../components/student/CourseCard';
 import { sampleCourses } from '../../MockData/CourseData';
 import Navbar from '../../components/student/Navbar';
 import Sidebar from '../../components/student/Sidebar';
+import Footer from '../../components/student/Footer'; 
 
 const StudentDashboard = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const location = useLocation();
+
+  const accreditations = [
+    'Washington Accord',
+    'ABET',
+    'Seoul Accord',
+    'Sydney Accord',
+    'Dublin Accord',
+    'AACSB',
+    'ACBSP'
+  ];
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -40,35 +51,29 @@ const StudentDashboard = () => {
       </div>
     );
   }
-
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="min-h-screen bg-gray-100">
       {/* Fixed Navbar */}
       <div className="fixed top-0 right-0 left-0 z-50">
         <Navbar onMenuClick={toggleSidebar} />
       </div>
-
+  
       {/* Sidebar */}
       {isSidebarVisible && (
-        <div className="fixed left-0 top-0 bottom-0 w-44">
+        <div className="fixed left-0 top-0 bottom-0 w-44 z-40">
           <Sidebar />
         </div>
       )}
-
-      {/* Main Content Area */}
-      <div
-        className={`flex-1 mt-16 ${isSidebarVisible ? 'ml-44' : 'ml-0'} overflow-y-auto`}
-      >
-        <div className="p-6 bg-gray-100 min-h-full">
+  
+      {/* Content + Footer Wrapper */}
+      <div className={`pt-16 ${isSidebarVisible ? 'pl-44' : ''}`}>
+        <div className="p-6 bg-gray-100 min-h-[calc(100vh-64px-200px)]">
           {showDashboardContent ? (
-            <div>
+            <>
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">
                 <h1 className="text-3xl font-normal">Ongoing Courses</h1>
                 <div className="flex gap-4">
-                  <a
-                    href="/student"
-                    className="text-blue-600 hover:text-blue-800"
-                  >
+                  <a href="/student" className="text-blue-600 hover:text-blue-800">
                     Home
                   </a>
                   <span className="text-gray-500">Ongoing Courses</span>
@@ -79,14 +84,20 @@ const StudentDashboard = () => {
                   <CourseCard key={course.id} course={course} />
                 ))}
               </div>
-            </div>
+            </>
           ) : (
             <Outlet />
           )}
         </div>
+  
+        {/* Footer */}
+        <div className={`${isSidebarVisible ? 'pl-10' : ''}`}>
+    <Footer accreditations={accreditations} />
+</div>
+
       </div>
     </div>
-  );
+  );  
 };
 
 export default StudentDashboard;

@@ -19,7 +19,7 @@ function AdminDashboard() {
       <div className="flex pt-20">
         {/* Sidebar */}
         {isSidebarVisible && (
-          <div className="fixed top-20 left-0 h-full w-64 bg-white shadow-md z-10">
+          <div className="">
             <Sidebar />
           </div>
         )}
@@ -27,7 +27,7 @@ function AdminDashboard() {
         {/* Main Content */}
         <main
           className={`flex-1 transition-all duration-300 ${
-            isSidebarVisible ? 'ml-64' : 'ml-0'
+            isSidebarVisible ? 'ml-48' : 'ml-0'
           }`}
         >
           <div className="p-6">
