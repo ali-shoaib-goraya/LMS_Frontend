@@ -38,6 +38,7 @@ import CampusTable from './pages/admin/tables/CampusTable';
 import SemesterTable from './pages/admin/tables/SemesterTable';
 import SchoolTable from './pages/admin/tables/SchoolTable';
 import CoursesTable from './pages/admin/tables/CoursesTable';
+import AdminCourseDetails from './pages/AdminCourseDetail';
 // import AddClassActivity from './pages/admin/Forms/ActivityForm';
 
 import TeacherDashboard from './pages/faculty/TeacherDashboard';
@@ -70,6 +71,7 @@ const App = () => {
         {/* Admin Routes */}
         <Route path="/dashboard" element={<AdminDashboard />}>
           <Route index element={<DashboardHome />} />
+          <Route path="/dashboard/coursedetail" element={<AdminCourseDetails />} />
           <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
           <Route path="courses" element={<Courses />} />
           <Route path="users" element={<Users />} />

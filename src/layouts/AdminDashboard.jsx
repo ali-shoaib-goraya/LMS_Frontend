@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import TeacherNavbar from '../components/faculty/TeacherNavbar';
 import Sidebar from '../components/Sidebar';
 
 function AdminDashboard() {
@@ -13,7 +13,7 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <Navbar onMenuClick={toggleSidebar} />
+      <TeacherNavbar onMenuClick={toggleSidebar} />
 
       {/* Main Layout */}
       <div className="flex pt-20">

@@ -13,18 +13,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   {
     name: 'Users Management',
-    icon: UserGroupIcon,
-    panel: [
-      { name: 'Add School', href: '/dashboard/users/school' },
-      { name: 'Add Campus', href: '/dashboard/users/campus' },
-      { name: 'Add Program', href: '/dashboard/users/program' },
-      { name: 'Add Program Batch', href: '/dashboard/users/program-batch' },
-      { name: 'Add Department', href: '/dashboard/users/department' },
-      { name: 'Add Semester', href: '/dashboard/users/semester' },
-      { name: 'Add Courses', href: '/dashboard/users/courses' },
-      { name: 'Add User', href: '/dashboard/users/user' },
-    ],
-  },
+    icon: UserGroupIcon,  },
   { name: 'Roles & Permissions', href: '/dashboard/roles-permissions', icon: KeyIcon },
   { name: 'Academic Structure', icon: AcademicCapIcon, 
     panel: [
