@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import TeacherNavbar from '../components/faculty/TeacherNavbar';
+import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 
 function AdminDashboard() {
@@ -13,10 +13,10 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <TeacherNavbar onMenuClick={toggleSidebar} />
+      <Navbar onMenuClick={toggleSidebar} />
 
       {/* Main Layout */}
-      <div className="flex pt-20">
+      <div className="flex pt-16">
         {/* Sidebar */}
         {isSidebarVisible && (
           <div className="">
@@ -27,7 +27,7 @@ function AdminDashboard() {
         {/* Main Content */}
         <main
           className={`flex-1 transition-all duration-300 ${
-            isSidebarVisible ? 'ml-48' : 'ml-0'
+            isSidebarVisible ? 'ml-36' : 'ml-0'
           }`}
         >
           <div className="p-6">

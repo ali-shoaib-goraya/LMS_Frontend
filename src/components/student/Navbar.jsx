@@ -34,7 +34,7 @@ function Navbar({ onMenuClick }) {
         <div className="flex items-center justify-between h-20">
           {/* Left Section */}
           <div className="flex items-center">
-            <img src={logo} alt="LMS Logo" className="h-16 w-auto" />
+            <img src={logo} alt="LMS Logo" className="h-20 w-auto" />
             <h1 className="ml-4 text-4xl font-bold text-primary-700">LMS</h1>
           </div>
 

@@ -10,6 +10,7 @@ import FoldersIcon from '@/assets/folders.png';
 
 const Sidebar = () => {
   const location = useLocation();
+
   const menuItems = [
     { path: '/student', icon: HomeIcon, label: 'Home' },
     { path: '/student/courses', icon: BookOpenIcon, label: 'My Courses' },
@@ -27,34 +28,31 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent pt-16">
-        <div className="flex flex-col space-y-4 p-4">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex flex-col items-center text-center p-2 rounded-lg transition-colors duration-200 min-h-[100px] ${
-                isActive(item.path)
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'hover:bg-gray-100'
-              }`}
-            >
-              <div className="w-12 h-12 mb-2">
-                <img
-                  src={item.icon}
-                  alt={`${item.label} icon`}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-sm">{item.label}</span>
-            </Link>
-          ))}
-        </div>
+    <div className="w-40 bg-white border-r border-gray-200 h-[calc(100vh-60px)] fixed left-0 top-16 flex flex-col z-10 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+      <div className="flex flex-col space-y-4 p-4">
+        {menuItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`flex flex-col items-center text-center p-2 rounded-lg transition-colors duration-200 min-h-[100px] ${
+              isActive(item.path)
+                ? 'bg-blue-100 text-blue-600'
+                : 'hover:bg-gray-100 text-gray-600'
+            }`}
+          >
+            <div className="w-12 h-12 mb-2">
+              <img
+                src={item.icon}
+                alt={`${item.label} icon`}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-sm">{item.label}</span>
+          </Link>
+        ))}
       </div>
     </div>
   );
 };
 
 export default Sidebar;
-

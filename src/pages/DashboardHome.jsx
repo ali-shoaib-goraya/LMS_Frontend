@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import AdminCourseCard from './AdminCourseCard';
 import { sampleCourses } from '../MockData/CourseData';
-import TeacherNavbar from '../components/faculty/TeacherNavbar';
 
 const DashboardHome = () => {
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSemester, setSelectedSemester] = useState('Fall 2024'); // Default semester
   const location = useLocation();
 
   const showDashboardContent = location.pathname === '/dashboard';
@@ -19,7 +17,6 @@ const DashboardHome = () => {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Load all courses without filtering by instructor
         setCourses(sampleCourses);
         setFilteredCourses(sampleCourses);
       } catch (error) {
@@ -33,20 +30,19 @@ const DashboardHome = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = courses.filter(course => course.term === selectedSemester);
-    setFilteredCourses(filtered);
-  }, [selectedSemester, courses]);
+    setFilteredCourses(courses); // No filtering logic, just display all courses
+  }, [courses]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase().trim();
-    const filtered = courses.filter((course) => {
-      const courseTitle = course.title?.toLowerCase() || '';
-      const courseCode = course.code?.toLowerCase() || '';
-      return courseTitle.includes(query) || courseCode.includes(query);
-    });
+    const filtered = courses.filter((course) => 
+      (course.title?.toLowerCase() || '').includes(query) || 
+      (course.code?.toLowerCase() || '').includes(query)
+    );
     setFilteredCourses(filtered);
   };
 
+  // Group courses by semester
   const coursesByTerm = filteredCourses.reduce((acc, course) => {
     const term = course.term || 'Unknown Term';
     if (!acc[term]) {
@@ -66,13 +62,6 @@ const DashboardHome = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <div className="fixed top-0 right-0 left-0 z-50">
-        <TeacherNavbar 
-          selectedSemester={selectedSemester}
-          onSemesterChange={setSelectedSemester}
-        />
-      </div>
 
       {/* Main Content */}
       <div className="pt-6 px-6">

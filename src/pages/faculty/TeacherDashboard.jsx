@@ -94,8 +94,8 @@ const TeacherDashboard = () => {
       )}
 
       {/* Main Content */}
-      <div className={`flex-1 mt-16 ${isSidebarVisible ? 'ml-44' : 'ml-0'} overflow-y-auto`}>
-        <div className="p-6 bg-gray-100 min-h-full">
+      <div className={`flex-1 mt-24 ${isSidebarVisible ? 'ml-36' : 'ml-0'} overflow-y-auto`}>
+        <div className="p-4 bg-gray-100 min-h-full">
           {showDashboardContent ? (
             <div>
               {/* Header */}

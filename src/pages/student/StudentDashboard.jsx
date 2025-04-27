@@ -66,8 +66,8 @@ const StudentDashboard = () => {
       )}
   
       {/* Content + Footer Wrapper */}
-      <div className={`pt-16 ${isSidebarVisible ? 'pl-44' : ''}`}>
-        <div className="p-6 bg-gray-100 min-h-[calc(100vh-64px-200px)]">
+      <div className={`pt-24 ${isSidebarVisible ? 'pl-44' : ''}`}>
+        <div className="p-2 bg-gray-100 min-h-[calc(100vh-64px-200px)]">
           {showDashboardContent ? (
             <>
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-2">

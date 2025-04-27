@@ -11,10 +11,8 @@ import Cog6ToothIcon from '@/assets/cog6tooth.png';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  {
-    name: 'Users Management',
-    icon: UserGroupIcon,  },
   { name: 'Roles & Permissions', href: '/dashboard/roles-permissions', icon: KeyIcon },
+  { name: 'Users Management', href: '/dashboard/user-management',icon: UserGroupIcon,  },
   { name: 'Academic Structure', icon: AcademicCapIcon, 
     panel: [
       { name: 'Manage Campus', href: '/dashboard/academic/campus' },
@@ -69,7 +67,7 @@ function Sidebar() {
     <div className="flex p-0 m-0">
       {/* Main Sidebar */}
       <div
-        className="w-48 bg-white border-r border-gray-200 h-[calc(100vh-80px)] fixed left-0 top-20 flex flex-col z-10"
+        className="w-40 bg-white border-r border-gray-200 h-[calc(100vh-60px)] fixed left-0 top-16 flex flex-col z-10"
         onMouseLeave={handleMouseLeave}
       >
         <div className="flex-1 overflow-y-auto pt-4">

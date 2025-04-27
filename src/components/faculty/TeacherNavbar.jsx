@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import logo from '@/assets/logo.png';
+import Bars3Icon from '@/assets/bars.png';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut, selectCurrentUser } from '../../features/auth/authSlice';
@@ -54,21 +55,19 @@ function TeacherNavbar({ onMenuClick, selectedSemester, onSemesterChange }) {
   return (
     <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
       <div className="w-full px-6 sm:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Left Section */}
           <div className="flex items-center space-x-4">
-            <img src={logo} alt="LMS Logo" className="h-12 w-auto" />
-            <h1 className="text-2xl font-bold text-primary-700">LMS</h1>
+            <img src={logo} alt="LMS Logo" className="h-20 w-auto" />
+            <h1 className="text-4xl font-bold text-primary-700">LMS</h1>
 
             {/* Sidebar toggle button */}
             <button
               type="button"
-              className="ml-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+              className="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
               onClick={onMenuClick}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
+            <img src={Bars3Icon} alt="Menu" className="h-8 w-8" />
             </button>
           </div>
 

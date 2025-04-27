@@ -19,14 +19,6 @@ import Reports from './pages/adminPages/Reports';
 import Settings from './pages/adminPages/Settings';
 import Grades from './pages/adminPages/Grades';
 import React from 'react';
-import CampusForm from './pages/admin/Forms/CampusForm';
-import DepartmentForm from './pages/admin/Forms/DepartmentForm';
-import ProgramBatchForm from './pages/admin/Forms/ProgramBatchForm';
-import UserForm from './pages/admin/Forms/UsersForm';
-import SchoolForm from './pages/admin/Forms/SchoolForm';
-import ProgramForm from './pages/admin/Forms/ProgramForm';
-import SemesterForm from './pages/admin/Forms/SemesterForm';
-import CoursesForm from './pages/admin/Forms/CoursesSectionForm';
 import StudentsTable from './pages/admin/tables/StudentsTable';
 import FacultyTable from './pages/admin/tables/FacultyTable';
 // import AttendanceTable from './pages/admin/tables/AttendanceTable';
@@ -40,9 +32,13 @@ import SchoolTable from './pages/admin/tables/SchoolTable';
 import CoursesTable from './pages/admin/tables/CoursesTable';
 import AdminCourseDetails from './pages/AdminCourseDetail';
 // import AddClassActivity from './pages/admin/Forms/ActivityForm';
+import TeachersOperations from './pages/faculty/TeachersOperations';
+import TeachersReports from './pages/faculty/TeachersReports';
+import TeachersSettings from './pages/faculty/TeachersSettings';
 
 import TeacherDashboard from './pages/faculty/TeacherDashboard';
 import TeacherCourseDetails from './pages/faculty/TeacherCourseDetails';
+import UserManagement from './pages/adminPages/UserManagement';
 
 const App = () => {
   return (
@@ -56,6 +52,9 @@ const App = () => {
         {/* Teacher Routes */}
         <Route path="/teacher" element={<TeacherDashboard />} >
         <Route path="/teacher/coursedetail" element={<TeacherCourseDetails />} />
+        <Route path="/teacher/operations" element={<TeachersOperations />} />
+        <Route path="/teacher/reports" element={<TeachersReports />} />
+        <Route path="/teacher/settings" element={<TeachersSettings />} />
         </Route>
 
         {/* Student Routes */}
@@ -79,16 +78,7 @@ const App = () => {
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
           <Route path="grades" element={<Grades />} />
-
-          {/* Users Management Sub-Routes */}
-          <Route path="users/campus" element={<CampusForm />} />
-          <Route path="users/department" element={<DepartmentForm />} />
-          <Route path="users/program-batch" element={<ProgramBatchForm />} />
-          <Route path="users/user" element={<UserForm />} />
-          <Route path="users/school" element={<SchoolForm />} />
-          <Route path="users/program" element={<ProgramForm />} />
-          <Route path="users/semester" element={<SemesterForm />} />
-          <Route path="users/course-section" element={<CoursesForm />} />
+          <Route path="user-management" element={<UserManagement />} />
 
           {/* Academic Structure Sub-Routes */}
           <Route path="academic/students" element={<StudentsTable />} />
