@@ -67,7 +67,7 @@ function Sidebar() {
     <div className="flex p-0 m-0">
       {/* Main Sidebar */}
       <div
-        className="w-40 bg-white border-r border-gray-200 h-[calc(100vh-60px)] fixed left-0 top-16 flex flex-col z-10"
+        className="w-40 bg-white border-r border-gray-200 h-[calc(100vh-60px)] fixed left-0 top-20 flex flex-col z-10"
         onMouseLeave={handleMouseLeave}
       >
         <div className="flex-1 overflow-y-auto pt-4">
@@ -118,7 +118,7 @@ function Sidebar() {
       {/* Dynamic Sub-Sidebar */}
       {activePanel && (
         <div
-          className="w-64 bg-white border-l border-gray-200 h-[calc(100vh-80px)] fixed top-20 left-48 z-20"
+          className="w-64 bg-white border-l border-gray-200 h-[calc(100vh-80px)] fixed top-20 left-36 z-20"
           onMouseEnter={handleSubSidebarEnter}
           onMouseLeave={handleSubSidebarLeave}
         >

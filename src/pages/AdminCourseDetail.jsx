@@ -8,6 +8,7 @@ import AwardList from "./faculty/AwardList";
 import VideoMaterial from "./faculty/VideoMaterial";
 import ActivityWeights from "./faculty/ActivityWeights";
 import CourseAttachment from "./faculty/CourseAttachment";
+import EnrolledStudents from "./EnrolledStudents";
 
 const AdminCourseDetails = () => {
   const location = useLocation();
@@ -19,6 +20,7 @@ const AdminCourseDetails = () => {
     Reports: ["Award List"],
     Configuration: ["Video Material", "Activity Weights", "Course Attachment"],
     TakeAttendance: null,
+    EnrolledStudents: null, // Add EnrolledStudents to tabs configuration
   };
 
   const [activeTab, setActiveTab] = useState("View");
@@ -70,7 +72,7 @@ const AdminCourseDetails = () => {
       case "Reports":
         switch (selectedItems.Reports) {
           case "Award List":
-            return <AwardList course ={course}/>;
+            return <AwardList course={course} />;
           default:
             return null;
         }
@@ -80,12 +82,15 @@ const AdminCourseDetails = () => {
             return <VideoMaterial />;
           case "Activity Weights":
             return <ActivityWeights />;
-            case "Course Attachment":
-              return <CourseAttachment/>;
-
+          case "Course Attachment":
+            return <CourseAttachment />;
           default:
             return null;
         }
+      case "EnrolledStudents":
+        return <EnrolledStudents course={course} />; // Pass course prop to EnrolledStudents
+      case "TakeAttendance":
+        return <TeacherTakeAttendance course={course} />; // Pass course prop to TeacherTakeAttendance
       default:
         return null;
     }
@@ -93,6 +98,9 @@ const AdminCourseDetails = () => {
 
   const handleTakeAttendance = () => {
     setActiveTab("TakeAttendance");
+  };
+  const handleEnrolledStudents = () => {
+    setActiveTab("EnrolledStudents");
   };
 
   return (
@@ -102,7 +110,7 @@ const AdminCourseDetails = () => {
       {/* Tabs */}
       <div className="flex border-b border-gray-200">
         {Object.keys(tabsConfig)
-          .filter((tab) => tab !== "TakeAttendance")
+          .filter((tab) => tab !== "TakeAttendance" && tab !== "EnrolledStudents")
           .map((tab) => (
             <div key={tab} className="relative">
               <button
@@ -163,6 +171,12 @@ const AdminCourseDetails = () => {
               >
                 Take Attendance
               </button>
+              <button
+                className="bg-gray-200 text-gray-800 px-4 py-2 rounded border border-blue-500 hover:bg-blue-600 hover:text-white transition"
+                onClick={handleEnrolledStudents}
+              >
+                Enrolled Students
+              </button>
             </div>
 
             {/* Table Section */}
@@ -209,15 +223,8 @@ const AdminCourseDetails = () => {
           </div>
         )}
 
-        {activeTab === "TakeAttendance" && (
-          <div className="mt-4 text-gray-700">
-            <TeacherTakeAttendance/>
-          </div>
-        )}
-
-        {(activeTab === "Activities" ||
-          activeTab === "Reports" ||
-          activeTab === "Configuration") && (
+        {/* Render the appropriate component based on active tab */}
+        {activeTab !== "View" && (
           <div className="mt-4">
             {renderComponent()}
           </div>

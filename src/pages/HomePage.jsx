@@ -10,6 +10,7 @@ import timetable from "../assets/timetable.png";
 import attendance from "../assets/attendance.png";
 import progresstracking from "../assets/progresstracking.png";
 import discussionforum from "../assets/discussionforum.png";
+import namal from "../assets/namal.jpg";
 
 
 const HomePage = () => {
@@ -52,14 +53,18 @@ const HomePage = () => {
         </div>
       </header>
 
-      <div className="relative flex flex-col items-center justify-center py-20 bg-cover bg-center text-white" style={{ backgroundImage: 'url(\'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80\')' }}>
+<div
+  className="relative flex flex-col items-center justify-center py-32 bg-cover bg-center text-white"
+  style={{ backgroundImage: `url(${namal})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '80vh' }}
+>
+
         <h1 className="text-5xl font-bold mb-6">Welcome to University LMS</h1>
         <p className="text-lg mb-10 max-w-3xl text-center">
           Transform your learning experience with our state-of-the-art Learning Management System that empowers students, faculty, and administrators to succeed.
         </p>
         <div className="flex gap-6">
-          <button className="px-6 py-3 bg-primary-700 text-white rounded-lg hover:bg-primary-800 transition duration-200 shadow-md">Book a Demo</button>
-          <button className="px-6 py-3 bg-secondary-700 text-white rounded-lg hover:bg-secondary-800 transition duration-200 shadow-md">Request Information</button>
+          {/* <button className="px-6 py-3 bg-primary-700 text-white rounded-lg hover:bg-primary-800 transition duration-200 shadow-md">Book a Demo</button>
+          <button className="px-6 py-3 bg-secondary-700 text-white rounded-lg hover:bg-secondary-800 transition duration-200 shadow-md">Request Information</button> */}
         </div>
       </div>
 

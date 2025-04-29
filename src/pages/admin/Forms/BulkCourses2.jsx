@@ -166,30 +166,45 @@ const AddCourses = ({ school, semester, prefix, onBack, onNext }) => {
             Add Course
           </button>
 
-          {/* Selected Courses Table */}
-          {courses.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Selected Courses</h3>
-              <table className="w-full border">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border px-4 py-2">Course Code</th>
-                    <th className="border px-4 py-2">Name</th>
-                    <th className="border px-4 py-2">Department</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {courses.map((course) => (
-                    <tr key={course.courseId}>
-                      <td className="border px-4 py-2">{course.courseCode}</td>
-                      <td className="border px-4 py-2">{course.courseName}</td>
-                      <td className="border px-4 py-2">{course.department}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+{/* Selected Courses Table */}
+{courses.length > 0 && (
+  <div className="mt-4">
+    <h3 className="text-lg font-semibold mb-2">Selected Courses</h3>
+    <table className="w-full border">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="border px-4 py-2">Course Code</th>
+          <th className="border px-4 py-2">Name</th>
+          <th className="border px-4 py-2">Department</th>
+          <th className="border px-4 py-2">Sections</th> {/* New Column */}
+        </tr>
+      </thead>
+      <tbody>
+        {courses.map((course, index) => (
+          <tr key={course.courseId}>
+            <td className="border px-4 py-2">{course.courseCode}</td>
+            <td className="border px-4 py-2">{course.courseName}</td>
+            <td className="border px-4 py-2">{course.department}</td>
+            <td className="border px-4 py-2">
+              <input
+                type="number"
+                min="1"
+                value={course.sections}
+                onChange={(e) => {
+                  const newCourses = [...courses];
+                  newCourses[index].sections = parseInt(e.target.value) || 1;
+                  setCourses(newCourses);
+                }}
+                className="w-20 p-1 border rounded"
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
 
           {/* Navigation Buttons */}
           <div className="mt-6 flex justify-between">

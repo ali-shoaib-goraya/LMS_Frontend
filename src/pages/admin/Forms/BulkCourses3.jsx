@@ -1,8 +1,16 @@
 import React, { useState } from "react";
+import Select from "react-select"; // Just imported react-select
+import { facultyData } from "../../../MockData/mockFaculty";
 
 const SelectTeachers = ({ school, semester, prefix, onBack, onSave, courses }) => {
-  const [courseData, setCourseData] = useState(courses ?? []); // Ensure courses is always an array
-  const [step, setStep] = useState(3); // Initialize step state
+  const [courseData, setCourseData] = useState(courses ?? []);
+  const [step, setStep] = useState(3);
+
+  // Prepare teacher options for react-select
+  const teacherOptions = facultyData.map((teacher) => ({
+    value: teacher.name,
+    label: teacher.name,
+  }));
 
   const handleChange = (id, field, value) => {
     setCourseData((prevCourses) =>
@@ -37,7 +45,7 @@ const SelectTeachers = ({ school, semester, prefix, onBack, onSave, courses }) =
                 ? "border-b-4 border-green-600 text-gray-800"
                 : "border-gray-300 text-gray-400"
             }`}
-            onClick={() => onBack()} // Fixed: Wrapped in an arrow function
+            onClick={() => onBack()}
           >
             Step 2 <br /> Add Courses & Select No. of Sections
           </div>
@@ -84,10 +92,72 @@ const SelectTeachers = ({ school, semester, prefix, onBack, onSave, courses }) =
           </div>
         </div>
 
+        {courseData.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-4">Selected Courses</h3>
+            <table className="w-full border">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border px-4 py-2">Course Code</th>
+                  <th className="border px-4 py-2">Course Name</th>
+                  <th className="border px-4 py-2">Department</th>
+                  <th className="border px-4 py-2">Section No.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {courseData.flatMap((course) =>
+                  Array.from({ length: course.sections || 1 }, (_, index) => (
+                    <tr key={`${course.courseId}-${index}`} className="text-center">
+                      <td className="border px-4 py-2">{course.courseCode}</td>
+                      <td className="border px-4 py-2">{course.courseName}</td>
+                      <td className="border px-4 py-2">{course.department}</td>
+                      <td className="border px-4 py-2">
+                        {/* -------------- Only this part changed to React Select -------------- */}
+                        <Select
+                          options={teacherOptions}
+                          value={
+                            course.selectedTeachers?.[index]
+                              ? { value: course.selectedTeachers[index], label: course.selectedTeachers[index] }
+                              : null
+                          }
+                          onChange={(selectedOption) => {
+                            const selectedTeacher = selectedOption?.value || "";
+                            setCourseData((prevCourses) =>
+                              prevCourses.map((c) => {
+                                if (c.courseId === course.courseId) {
+                                  const updatedTeachers = [...(c.selectedTeachers || [])];
+                                  updatedTeachers[index] = selectedTeacher;
+                                  return { ...c, selectedTeachers: updatedTeachers };
+                                }
+                                return c;
+                              })
+                            );
+                          }}
+                          placeholder="Select Teacher"
+                          isClearable
+                          className="w-full" // keep it fitting the table width
+                          styles={{
+                            control: (provided) => ({
+                              ...provided,
+                              minHeight: "35px", // match native select height
+                              fontSize: "14px",
+                            }),
+                          }}
+                        />
+                        {/* --------------------------------------------------------------- */}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         {/* Navigation Buttons */}
         <div className="mt-6 flex justify-between">
           <button
-            onClick={() => onBack()} // Fixed: Wrapped in an arrow function
+            onClick={() => onBack()}
             className="px-6 py-2 bg-gray-600 text-white font-semibold rounded hover:bg-gray-700"
           >
             Back

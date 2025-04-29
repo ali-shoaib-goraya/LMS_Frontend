@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { mockStudents } from "../../../MockData/mockStudents";
-import UserForm from "../Forms/UsersForm";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
+import StudentForm from "../Forms/StudentForm"; // Import the StudentForm component
 
 const StudentsTable = () => {
   const [students] = useState(mockStudents);
@@ -55,7 +55,7 @@ const StudentsTable = () => {
 
       {/* Conditional Rendering: Show form or table */}
       {showForm ? (
-        <UserForm onBack={() => setShowForm(false)} /> // Show form when button is clicked
+        <StudentForm onBack={() => setShowForm(false)} /> // Show form when button is clicked
       ) : (
         <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg overflow-x-auto">
           {/* Table Info */}
