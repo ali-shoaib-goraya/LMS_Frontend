@@ -6,12 +6,44 @@ import deleteIcon from "../../../assets/trash.png";
 
 const DepartmentTable = () => {
   const [departments] = useState(mockDepartments);
-  const [showForm, setShowForm] = useState(false); // Toggle form view
+  const [showForm, setShowForm] = useState(false);
+  const [filters, setFilters] = useState({
+    departmentName: "",
+    school: "",
+    type: "",
+  });
 
-  // Pagination (Mock for now)
-  const totalItems = departments.length;
-  const startIndex = 0;
-  const endIndex = totalItems;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Filter departments
+  const filteredDepartments = departments.filter((dept) =>
+    Object.keys(filters).every((key) =>
+      filters[key]
+        ? dept[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
+        : true
+    )
+  );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredDepartments.length / itemsPerPage);
+  const paginatedDepartments = filteredDepartments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleFilterChange = (e, key) => {
+    setFilters({ ...filters, [key]: e.target.value });
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  const handlePageChange = (direction) => {
+    if (direction === "prev" && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else if (direction === "next" && currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -28,11 +60,14 @@ const DepartmentTable = () => {
           {/* Header & Create Button */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
-              Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
+              Showing {filteredDepartments.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
+              -
+              {Math.min(currentPage * itemsPerPage, filteredDepartments.length)} of{" "}
+              {filteredDepartments.length} items
             </h2>
             <button
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              onClick={() => setShowForm(true)} // Show form
+              onClick={() => setShowForm(true)}
             >
               Create
             </button>
@@ -40,27 +75,61 @@ const DepartmentTable = () => {
 
           {/* Table */}
           <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
+            <thead className="bg-white-200">
               <tr className="text-left border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Department Name</th>
-                <th className="border border-gray-300 px-4 py-3">School</th>
-                <th className="border border-gray-300 px-4 py-3">Type</th>
-                <th className="border border-gray-300 px-4 py-3">Default GPA Method</th>
-                <th className="border border-gray-300 px-4 py-3">Attendance %</th>
-                <th className="border border-gray-300 px-4 py-3">Actions</th>
+                <th className="border border-gray-300 px-4 py-1">
+                  <div className="flex flex-col text-center">
+                    <span>Department Name</span>
+                    <input
+                      type="text"
+                      className="mt-1 p-1 border rounded text-sm bg-gray-50"
+                      value={filters.departmentName}
+                      onChange={(e) => handleFilterChange(e, "departmentName")}
+                    />
+                  </div>
+                </th>
+                <th className="border border-gray-300 px-4 py-1">
+                  <div className="flex flex-col text-center">
+                    <span>School</span>
+                    <input
+                      type="text"
+                      className="mt-1 p-1 border rounded text-sm bg-gray-50"
+                      value={filters.school}
+                      onChange={(e) => handleFilterChange(e, "school")}
+                    />
+                  </div>
+                </th>
+                <th className="border border-gray-300 px-4 py-1">
+                  <div className="flex flex-col text-center">
+                    <span>Type</span>
+                    <input
+                      type="text"
+                      className="mt-1 p-1 border rounded text-sm bg-gray-50"
+                      value={filters.type}
+                      onChange={(e) => handleFilterChange(e, "type")}
+                    />
+                  </div>
+                </th>
+                <th className="border border-gray-300 px-4 py-1">Default GPA Method</th>
+                <th className="border border-gray-300 px-4 py-1">Attendance %</th>
+                <th className="border border-gray-300 px-4 py-1">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {departments.length > 0 ? (
-                departments.map((dept, index) => (
+              {paginatedDepartments.length > 0 ? (
+                paginatedDepartments.map((dept, index) => (
                   <tr key={dept.id} className="text-center hover:bg-gray-100 transition">
-                    <td className="border border-gray-300 px-4 py-3">{index + 1}</td>
+                    <td className="border border-gray-300 px-4 py-3">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </td>
                     <td className="border border-gray-300 px-4 py-3">{dept.departmentName}</td>
                     <td className="border border-gray-300 px-4 py-3">{dept.school}</td>
                     <td className="border border-gray-300 px-4 py-3">{dept.type}</td>
                     <td className="border border-gray-300 px-4 py-3">{dept.defaultGPAMethod}</td>
-                    <td className="border border-gray-300 px-4 py-3">{dept.attendancePercentage}%</td>
+                    <td className="border border-gray-300 px-4 py-3">
+                      {dept.attendancePercentage}%
+                    </td>
                     <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
                       <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
                         <img src={editIcon} alt="Edit" className="w-5 h-5" />
@@ -80,6 +149,20 @@ const DepartmentTable = () => {
               )}
             </tbody>
           </table>
+
+          <div className="flex justify-start mt-4">
+            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-3 py-2 border rounded bg-gray-200 mr-2">
+              «
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-2 border rounded mx-1 ${currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}>
+                {i + 1}
+              </button>
+            ))}
+            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-2 border rounded bg-gray-200 ml-2">
+              »
+            </button>
+          </div>
         </div>
       )}
     </div>

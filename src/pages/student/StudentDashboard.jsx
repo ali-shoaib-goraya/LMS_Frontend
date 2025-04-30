@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+  import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import CourseCard from '../../components/student/CourseCard';
 import { sampleCourses } from '../../MockData/CourseData';

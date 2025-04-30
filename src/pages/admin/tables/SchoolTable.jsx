@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {mockSchools} from "../../../MockData/mockSchools";
-import SchoolForm from "../Forms/SchoolForm"; // Assuming you have a form component
+import { mockSchools } from "../../../MockData/mockSchools";
+import SchoolForm from "../Forms/SchoolForm";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
 
@@ -10,7 +10,7 @@ const SchoolTable = () => {
   const [showForm, setShowForm] = useState(false);
 
   const [filters, setFilters] = useState({
-    name: "",
+    schoolName: "",
     shortName: "",
     city: "",
   });
@@ -26,13 +26,34 @@ const SchoolTable = () => {
     );
   };
 
+  const handleSelectAll = () => {
+    const currentPageIds = currentSchools.map((school) => school.id);
+    const allSelected = currentPageIds.every((id) =>
+      selectedSchools.includes(id)
+    );
+
+    if (allSelected) {
+      setSelectedSchools((prevSelected) =>
+        prevSelected.filter((id) => !currentPageIds.includes(id))
+      );
+    } else {
+      setSelectedSchools((prevSelected) => [
+        ...prevSelected,
+        ...currentPageIds.filter((id) => !prevSelected.includes(id)),
+      ]);
+    }
+  };
+
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
+    setCurrentPage(1);
   };
 
   const filteredSchools = schools.filter((school) =>
     Object.keys(filters).every((key) =>
-      filters[key] ? school[key]?.toString().toLowerCase().includes(filters[key].toLowerCase()) : true
+      filters[key]
+        ? school[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
+        : true
     )
   );
 
@@ -41,6 +62,10 @@ const SchoolTable = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentSchools = filteredSchools.slice(startIndex, endIndex);
+
+  const isCurrentPageFullySelected = currentSchools.every((school) =>
+    selectedSchools.includes(school.id)
+  );
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -67,36 +92,52 @@ const SchoolTable = () => {
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
-                <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Select</th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Name
-                  <input
-                    type="text"
-                    value={filters.schoolName}
-                    onChange={(e) => handleFilterChange(e, "schoolName")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">#</th>
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span className="mb-1">Select</span>
+                    <input
+                      type="checkbox"
+                      checked={isCurrentPageFullySelected}
+                      onChange={handleSelectAll}
+                      className="cursor-pointer w-4 h-4"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Short Name
-                  <input
-                    type="text"
-                    value={filters.shortName}
-                    onChange={(e) => handleFilterChange(e, "shortName")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">Name</span>
+                    <input
+                      type="text"
+                      value={filters.schoolName}
+                      onChange={(e) => handleFilterChange(e, "schoolName")}
+                      className="w-36 p-1 border rounded text-sm text-center bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  City
-                  <input
-                    type="text"
-                    value={filters.city}
-                    onChange={(e) => handleFilterChange(e, "city")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">Short Name</span>
+                    <input
+                      type="text"
+                      value={filters.shortName}
+                      onChange={(e) => handleFilterChange(e, "shortName")}
+                      className="w-28 p-1 border rounded text-sm text-center bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">Address</th>
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">City</span>
+                    <input
+                      type="text"
+                      value={filters.city}
+                      onChange={(e) => handleFilterChange(e, "city")}
+                      className="w-28 p-1 border rounded text-sm text-center bg-gray-50"
+                    />
+                  </div>
+                </th>
+                <th className="border border-gray-300 px-4 py-3 text-center">Address</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
@@ -104,7 +145,9 @@ const SchoolTable = () => {
               {currentSchools.length > 0 ? (
                 currentSchools.map((school, index) => (
                   <tr key={school.id} className="text-center hover:bg-gray-100 transition">
-                    <td className="border border-gray-300 px-4 py-3">{startIndex + index + 1}</td>
+                    <td className="border border-gray-300 px-4 py-3">
+                      {startIndex + index + 1}
+                    </td>
                     <td className="border border-gray-300 px-4 py-3">
                       <input
                         type="checkbox"
@@ -117,13 +160,15 @@ const SchoolTable = () => {
                     <td className="border border-gray-300 px-4 py-3">{school.shortName}</td>
                     <td className="border border-gray-300 px-4 py-3">{school.city}</td>
                     <td className="border border-gray-300 px-4 py-3">{school.address}</td>
-                    <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
-                      <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
-                        <img src={editIcon} alt="Edit" className="w-5 h-5" />
-                      </button>
-                      <button className="hover:opacity-80">
-                        <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
-                      </button>
+                    <td className="border border-gray-300 px-4 py-3">
+                      <div className="flex justify-center gap-2">
+                        <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
+                          <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                        </button>
+                        <button className="hover:opacity-80">
+                          <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

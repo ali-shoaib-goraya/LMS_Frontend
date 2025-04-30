@@ -28,6 +28,15 @@ const CampusTable = () => {
     );
   };
 
+  // Select All Checkbox handler
+  const handleSelectAllChange = () => {
+    if (selectedCampuses.length === campuses.length) {
+      setSelectedCampuses([]);
+    } else {
+      setSelectedCampuses(campuses.map((campus) => campus.id));
+    }
+  };
+
   // Filtering Logic
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
@@ -75,16 +84,26 @@ const CampusTable = () => {
           {/* Table */}
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-white">
-              <tr className="text-left border-b border-gray-300">
+              <tr className="text-center border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Select</th>
+                <th className="border border-gray-300 px-4 py-3">
+                  Select
+                  <div className="flex justify-center mt-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedCampuses.length === campuses.length}
+                      onChange={handleSelectAllChange}
+                      className="cursor-pointer w-4 h-4"
+                    />
+                  </div>
+                </th>
                 <th className="border border-gray-300 px-4 py-3">
                   Name
                   <input
                     type="text"
                     value={filters.name}
                     onChange={(e) => handleFilterChange(e, "name")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                    className="w-full mt-2 p-2 border rounded text-sm bg-gray-50"
                   />
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
@@ -93,7 +112,7 @@ const CampusTable = () => {
                     type="text"
                     value={filters.shortName}
                     onChange={(e) => handleFilterChange(e, "shortName")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                    className="w-full mt-2 p-2 border rounded text-sm bg-gray-50"
                   />
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
@@ -102,7 +121,7 @@ const CampusTable = () => {
                     type="text"
                     value={filters.type}
                     onChange={(e) => handleFilterChange(e, "type")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                    className="w-full mt-2 p-2 border rounded text-sm bg-gray-50"
                   />
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
@@ -111,7 +130,7 @@ const CampusTable = () => {
                     type="text"
                     value={filters.city}
                     onChange={(e) => handleFilterChange(e, "city")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                    className="w-full mt-2 p-2 border rounded text-sm bg-gray-50"
                   />
                 </th>
                 <th className="border border-gray-300 px-4 py-3">Address</th>

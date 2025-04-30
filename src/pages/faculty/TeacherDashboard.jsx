@@ -4,6 +4,7 @@ import TeacherCourseCard from '../../components/faculty/TeacherCourseCard';
 import { sampleCourses } from '../../MockData/CourseData';
 import TeacherNavbar from '../../components/faculty/TeacherNavbar';
 import TeacherSidebar from '../../components/faculty/TeacherSidebar';
+import Footer from '../../components/student/Footer'; // Adjust the import path as necessary
 
 const TeacherDashboard = () => {
   const [courses, setCourses] = useState([]);
@@ -14,6 +15,16 @@ const TeacherDashboard = () => {
   const location = useLocation();
 
   const loggedInTeacherName = 'Muhammad Shahzad Arif'; // Replace this with actual login data later
+
+  const accreditations = [
+    'Washington Accord',
+    'ABET',
+    'Seoul Accord',
+    'Sydney Accord',
+    'Dublin Accord',
+    'AACSB',
+    'ACBSP'
+  ];
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -134,6 +145,10 @@ const TeacherDashboard = () => {
             <Outlet />
           )}
         </div>
+                      {/* Footer */}
+                      <div className={`${isSidebarVisible ? 'pl-10' : ''}`}>
+    <Footer accreditations={accreditations} />
+</div>
       </div>
     </div>
   );

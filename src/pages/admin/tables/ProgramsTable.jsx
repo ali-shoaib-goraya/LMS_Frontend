@@ -57,32 +57,38 @@ const ProgramTable = () => {
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Name
-                  <input
-                    type="text"
-                    value={filters.name}
-                    onChange={(e) => handleFilterChange(e, "name")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span>Name</span>
+                    <input
+                      type="text"
+                      value={filters.name}
+                      onChange={(e) => handleFilterChange(e, "name")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Department
-                  <input
-                    type="text"
-                    value={filters.department}
-                    onChange={(e) => handleFilterChange(e, "department")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span>Department</span>
+                    <input
+                      type="text"
+                      value={filters.department}
+                      onChange={(e) => handleFilterChange(e, "department")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Program Level
-                  <input
-                    type="text"
-                    value={filters.programlevel}
-                    onChange={(e) => handleFilterChange(e, "programlevel")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span>Program Level</span>
+                    <input
+                      type="text"
+                      value={filters.programlevel}
+                      onChange={(e) => handleFilterChange(e, "programlevel")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>

@@ -43,7 +43,7 @@ const CampusForm = ({ onBack }) => {
     }`;
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-lg shadow-lg border border-gray-200">
+    <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Input fields */}

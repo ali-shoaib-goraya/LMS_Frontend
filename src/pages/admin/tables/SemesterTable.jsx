@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {mockSemesters} from "../../../MockData/mockSemesters";
-import SemesterForm from "../Forms/SemesterForm"; // Assuming you have a form component
+import { mockSemesters } from "../../../MockData/mockSemesters";
+import SemesterForm from "../Forms/SemesterForm";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
 
@@ -11,9 +11,7 @@ const SemesterTable = () => {
 
   const [filters, setFilters] = useState({
     name: "",
-    year: "",
-    startDate: "",
-    endDate: "",
+    academicYear: "",
   });
 
   const itemsPerPage = 20;
@@ -32,8 +30,10 @@ const SemesterTable = () => {
   };
 
   const filteredSemesters = semesters.filter((semester) =>
-    Object.keys(filters).every((key) =>
-      filters[key] ? semester[key]?.toString().toLowerCase().includes(filters[key].toLowerCase()) : true
+    ["name", "academicYear"].every((key) =>
+      filters[key]
+        ? semester[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
+        : true
     )
   );
 
@@ -42,6 +42,14 @@ const SemesterTable = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentSemesters = filteredSemesters.slice(startIndex, endIndex);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedSemesters(currentSemesters.map((s) => s.id));
+    } else {
+      setSelectedSemesters([]);
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -69,43 +77,52 @@ const SemesterTable = () => {
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Select</th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Name
-                  <input
-                    type="text"
-                    value={filters.name}
-                    onChange={(e) => handleFilterChange(e, "name")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span className="mb-1">Select</span>
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      onChange={handleSelectAll}
+                      checked={
+                        currentSemesters.length > 0 &&
+                        currentSemesters.every((s) => selectedSemesters.includes(s.id))
+                      }
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">Year
-                <input
-                    type="text"
-                    value={filters.academicYear}
-                    onChange={(e) => handleFilterChange(e, "academicYear")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span className="mb-1">Name</span>
+                    <input
+                      type="text"
+                      value={filters.name}
+                      onChange={(e) => handleFilterChange(e, "name")}
+                      className="w-40 p-1 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">Start Date
-                <input
-                    type="text"
-                    value={filters.startDate}
-                    onChange={(e) => handleFilterChange(e, "startDate")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center">
+                    <span className="mb-1">Year</span>
+                    <input
+                      type="text"
+                      value={filters.academicYear}
+                      onChange={(e) => handleFilterChange(e, "academicYear")}
+                      className="w-40 p-1 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">End Date
-                <input
-                    type="text"
-                    value={filters.endDate}
-                    onChange={(e) => handleFilterChange(e, "endDate")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
+
+                <th className="border border-gray-300 px-4 py-3 text-center">Start Date</th>
+                <th className="border border-gray-300 px-4 py-3 text-center">End Date</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {currentSemesters.length > 0 ? (
                 currentSemesters.map((semester, index) => (

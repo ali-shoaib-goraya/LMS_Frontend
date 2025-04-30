@@ -11,7 +11,6 @@ const FacultyTable = () => {
     name: "",
     gender: "",
     designation: "",
-    highestDegree: "",
     facultyType: "",
     isPhD: "",
     type: "",
@@ -59,8 +58,8 @@ const FacultyTable = () => {
       {showForm ? (
         <FacultyForm onBack={() => setShowForm(false)} />
       ) : (
-        <div className="bg-white p-6 shadow-lg rounded-lg overflow-x-auto w-full max-w-7xl">
-          {/* Table Info */}
+        <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-7xl">
+          {/* Fixed Header Area (not scrollable) */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
               Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
@@ -73,144 +72,149 @@ const FacultyTable = () => {
             </button>
           </div>
 
-          {/* Table */}
-          <table className="w-full border-collapse border border-gray-300">
-            {/* Table Head */}
-            <thead className="bg-gray-200">
-              <tr className="text-left">
-                <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Name
-                  <input
-                    type="text"
-                    value={filters.name}
-                    onChange={(e) => handleFilterChange(e, "name")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Gender
-                  <select
-                    value={filters.gender}
-                    onChange={(e) => handleFilterChange(e, "gender")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  >
-                    <option value="">All</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Designation
-                  <input
-                    type="text"
-                    value={filters.designation}
-                    onChange={(e) => handleFilterChange(e, "designation")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Highest Degree
-                  <input
-                    type="text"
-                    value={filters.highestDegree}
-                    onChange={(e) => handleFilterChange(e, "highestDegree")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Faculty Type
-                  <input
-                    type="text"
-                    value={filters.facultyType}
-                    onChange={(e) => handleFilterChange(e, "facultyType")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Is PhD?
-                  <select
-                    value={filters.isPhD}
-                    onChange={(e) => handleFilterChange(e, "isPhD")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  >
-                    <option value="">All</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Type
-                  <input
-                    type="text"
-                    value={filters.type}
-                    onChange={(e) => handleFilterChange(e, "type")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Active
-                  <select
-                    value={filters.active}
-                    onChange={(e) => handleFilterChange(e, "active")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  >
-                    <option value="">All</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </th>
-                <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
-              </tr>
-            </thead>
+          {/* Table Container - ONLY THIS PART IS SCROLLABLE */}
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              {/* Table Head */}
+              <thead className="bg-white-200">
+                <tr className="text-left">
+                  <th className="border border-gray-300 px-4 py-3 text-center">#</th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Name</div>
+                    <input
+                      type="text"
+                      value={filters.name}
+                      onChange={(e) => handleFilterChange(e, "name")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    />
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Gender</div>
+                    {/* <select
+                      value={filters.gender}
+                      onChange={(e) => handleFilterChange(e, "gender")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    >
+                      <option value="">All</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select> */}
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Designation</div>
+                    <input
+                      type="text"
+                      value={filters.designation}
+                      onChange={(e) => handleFilterChange(e, "designation")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    />
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Faculty Type</div>
+                    <input
+                      type="text"
+                      value={filters.facultyType}
+                      onChange={(e) => handleFilterChange(e, "facultyType")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    />
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Is PhD?</div>
+                    {/* <select
+                      value={filters.isPhD}
+                      onChange={(e) => handleFilterChange(e, "isPhD")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    >
+                      <option value="">All</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select> */}
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Type</div>
+                    <input
+                      type="text"
+                      value={filters.type}
+                      onChange={(e) => handleFilterChange(e, "type")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    />
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3">
+                    <div className="text-center">Active</div>
+                    {/* <select
+                      value={filters.active}
+                      onChange={(e) => handleFilterChange(e, "active")}
+                      className="w-32 mx-auto mt-1 p-2 border rounded text-sm bg-gray-50 block"
+                    >
+                      <option value="">All</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select> */}
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
 
-            {/* Table Body */}
-            <tbody>
-              {currentFaculty.length > 0 ? (
-                currentFaculty.map((faculty, index) => (
-                  <tr key={faculty.id} className="text-left hover:bg-gray-100 transition">
-                    <td className="border border-gray-300 px-4 py-3">{startIndex + index + 1}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.name}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.gender}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.designation}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.highestDegree}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.facultyType}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.isPhD}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.type}</td>
-                    <td className="border border-gray-300 px-4 py-3">{faculty.active}</td>
-                    <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
-                      <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
-                        <img src={editIcon} alt="Edit" className="w-5 h-5" />
-                      </button>
-                      <button className="hover:opacity-80">
-                        <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
-                      </button>
+              {/* Table Body with whitespace-nowrap to prevent text breaking */}
+              <tbody>
+                {currentFaculty.length > 0 ? (
+                  currentFaculty.map((faculty, index) => (
+                    <tr key={faculty.id} className="text-left hover:bg-gray-100 transition">
+                      <td className="border border-gray-300 px-4 py-3 text-center">{startIndex + index + 1}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.name}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.gender}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.designation}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.facultyType}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.isPhD}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.type}</td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">{faculty.active}</td>
+                      <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
+                        <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
+                          <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                        </button>
+                        <button className="hover:opacity-80" onClick={() => handleDelete(faculty.id)}>
+                          <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="10" className="text-center text-gray-600 py-4">
+                      No faculty found.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="10" className="text-center text-gray-600 py-4">
-                    No faculty found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {/* Pagination */}
-        <div className="flex justify-start mt-4">
-          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-3 py-2 border rounded bg-gray-200 mr-2">
-            «
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-2 border rounded mx-1 ${currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}>
-              {i + 1}
+                )}
+              </tbody>
+            </table>
+          </div>
+          
+          {/* Pagination - Outside scrollable area */}
+          <div className="flex justify-start mt-4">
+            <button 
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
+              disabled={currentPage === 1} 
+              className="px-3 py-2 border rounded bg-gray-200 mr-2"
+            >
+              «
             </button>
-          ))}
-          <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-2 border rounded bg-gray-200 ml-2">
-            »
-          </button>
-        </div>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button 
+                key={i + 1} 
+                onClick={() => setCurrentPage(i + 1)} 
+                className={`px-3 py-2 border rounded mx-1 ${currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button 
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
+              disabled={currentPage === totalPages} 
+              className="px-3 py-2 border rounded bg-gray-200 ml-2"
+            >
+              »
+            </button>
+          </div>
         </div>
       )}
     </div>
