@@ -11,10 +11,19 @@ import attendance from "../assets/attendance.png";
 import progresstracking from "../assets/progresstracking.png";
 import discussionforum from "../assets/discussionforum.png";
 import namal from "../assets/namal.jpg";
-
+import Footer from "../components/student/Footer";
 
 const HomePage = () => {
   const { initializeAuth } = useAuthInit();
+const accreditations = [
+  'Washington Accord',
+  'ABET',
+  'Seoul Accord',
+  'Sydney Accord',
+  'Dublin Accord',
+  'AACSB',
+  'ACBSP'
+  ];
 
   useEffect(() => {
     initializeAuth();
@@ -109,6 +118,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+{/* Footer */}
+<Footer accreditations={accreditations} />
     </div>
   );
 };
