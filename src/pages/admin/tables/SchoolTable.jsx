@@ -11,7 +11,7 @@ const SchoolTable = () => {
   const [totalItems, setTotalItems] = useState(0);
 
   const [filters, setFilters] = useState({
-    name: "",
+    schoolName: "",
     shortName: "",
     city: "",
   });
@@ -45,6 +45,7 @@ const SchoolTable = () => {
 
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
+    setCurrentPage(1);
     setCurrentPage(1);
   };
 
@@ -121,23 +122,27 @@ const SchoolTable = () => {
                     className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
                   />
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Short Name
-                  <input
-                    type="text"
-                    value={filters.shortName}
-                    onChange={(e) => handleFilterChange(e, "shortName")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">Short Name</span>
+                    <input
+                      type="text"
+                      value={filters.shortName}
+                      onChange={(e) => handleFilterChange(e, "shortName")}
+                      className="w-28 p-1 border rounded text-sm text-center bg-gray-50"
+                    />
+                  </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  City
-                  <input
-                    type="text"
-                    value={filters.city}
-                    onChange={(e) => handleFilterChange(e, "city")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">City</span>
+                    <input
+                      type="text"
+                      value={filters.city}
+                      onChange={(e) => handleFilterChange(e, "city")}
+                      className="w-28 p-1 border rounded text-sm text-center bg-gray-50"
+                    />
+                  </div>
                 </th>
                 <th className="border border-gray-300 px-4 py-3">Address</th>
                 <th className="border border-gray-300 px-4 py-3">Is Academic</th>

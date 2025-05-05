@@ -73,33 +73,54 @@ const ProgramBatchTable = () => {
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Select</th>
                 <th className="border border-gray-300 px-4 py-3">
-                  Program
-                  <input
-                    type="text"
-                    value={filters.program}
-                    onChange={(e) => handleFilterChange(e, "program")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                  <div className="flex flex-col items-center">
+                    <span>Select</span>
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedBatches(programBatches.map(batch => batch.id));
+                        } else {
+                          setSelectedBatches([]);
+                        }
+                      }}
+                      className="w-4 h-4 mt-1 cursor-pointer"
+                    />
+                  </div>
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
-                  Academic year
-                  <input
-                    type="number"
-                    value={filters.academicYear}
-                    onChange={(e) => handleFilterChange(e, "academicYear")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                  <div className="flex flex-col items-center">
+                    <span>Program</span>
+                    <input
+                      type="text"
+                      value={filters.program}
+                      onChange={(e) => handleFilterChange(e, "program")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
-                  Program Batch
-                  <input
-                    type="string"
-                    value={filters.programBatch}
-                    onChange={(e) => handleFilterChange(e, "programBatch")}
-                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                  />
+                  <div className="flex flex-col items-center">
+                    <span>Academic Year</span>
+                    <input
+                      type="number"
+                      value={filters.academicYear}
+                      onChange={(e) => handleFilterChange(e, "academicYear")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
+                </th>
+                <th className="border border-gray-300 px-4 py-3">
+                  <div className="flex flex-col items-center">
+                    <span>Program Batch</span>
+                    <input
+                      type="text"
+                      value={filters.programBatch}
+                      onChange={(e) => handleFilterChange(e, "programBatch")}
+                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
+                    />
+                  </div>
                 </th>
                 <th className="border border-gray-300 px-4 py-3">
                   Students

@@ -4,6 +4,13 @@ import SelectTeachers from "../Forms/BulkCourses3";
 
 const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
   const [selected, setSelected] = useState(selectedCourses);
+  const [filters, setFilters] = useState({
+    code: "",
+    name: "",
+    department: "",
+    creditHours: "",
+    deliveryFormat: ""
+  });
 
   const handleCheckboxChange = (courseId) => {
     setSelected((prev) =>
@@ -13,6 +20,38 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
     );
   };
 
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelected(filteredCourses.map(course => course.courseId));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const handleFilterChange = (e, key) => {
+    setFilters({ ...filters, [key]: e.target.value });
+  };
+
+  // Filter courses based on search criteria
+  const filteredCourses = mockCourses2.filter((course) => {
+    let deliveryFormat = "";
+    if (!course.isTheory) {
+      deliveryFormat = "Lab";
+    } else if (course.isTheory && !course.isLab) {
+      deliveryFormat = "Theory";
+    } else if (course.isTheory && course.isLab) {
+      deliveryFormat = "Theory + Lab";
+    }
+
+    return (
+      (!filters.code || course.courseCode.toLowerCase().includes(filters.code.toLowerCase())) &&
+      (!filters.name || course.courseName.toLowerCase().includes(filters.name.toLowerCase())) &&
+      (!filters.department || course.department.toLowerCase().includes(filters.department.toLowerCase())) &&
+      (!filters.creditHours || course.creditHours.toString().includes(filters.creditHours)) &&
+      (!filters.deliveryFormat || deliveryFormat.toLowerCase().includes(filters.deliveryFormat.toLowerCase()))
+    );
+  });
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded shadow-lg w-2/3 max-h-[80vh] overflow-auto">
@@ -20,16 +59,67 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
         <table className="w-full border">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border px-4 py-2">Select</th>
-              <th className="border px-4 py-2">Code</th>
-              <th className="border px-4 py-2">Name</th>
-              <th className="border px-4 py-2">Department</th>
-              <th className="border px-4 py-2">Credit Hours</th>
-              <th className="border px-4 py-2">Delivery Format</th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Select</span>
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4"
+                    onChange={handleSelectAll}
+                    checked={
+                      filteredCourses.length > 0 &&
+                      filteredCourses.every((c) => selected.includes(c.courseId))
+                    }
+                  />
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Code</span>
+                  <input
+                    type="text"
+                    value={filters.code}
+                    onChange={(e) => handleFilterChange(e, "code")}
+                    className="w-32 p-1 border rounded text-sm bg-gray-50 text-center"
+                  />
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Name</span>
+                  <input
+                    type="text"
+                    value={filters.name}
+                    onChange={(e) => handleFilterChange(e, "name")}
+                    className="w-32 p-1 border rounded text-sm bg-gray-50 text-center"
+                  />
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Department</span>
+                  <input
+                    type="text"
+                    value={filters.department}
+                    onChange={(e) => handleFilterChange(e, "department")}
+                    className="w-32 p-1 border rounded text-sm bg-gray-50 text-center"
+                  />
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Credit Hours</span>
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="mb-1">Delivery Format</span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
-            {mockCourses2.map((course) => {
+            {filteredCourses.map((course) => {
               let deliveryFormat = "";
               let adjustedCreditHours = course.creditHours;
 
@@ -166,45 +256,44 @@ const AddCourses = ({ school, semester, prefix, onBack, onNext }) => {
             Add Course
           </button>
 
-{/* Selected Courses Table */}
-{courses.length > 0 && (
-  <div className="mt-4">
-    <h3 className="text-lg font-semibold mb-2">Selected Courses</h3>
-    <table className="w-full border">
-      <thead>
-        <tr className="bg-gray-200">
-          <th className="border px-4 py-2">Course Code</th>
-          <th className="border px-4 py-2">Name</th>
-          <th className="border px-4 py-2">Department</th>
-          <th className="border px-4 py-2">Sections</th> {/* New Column */}
-        </tr>
-      </thead>
-      <tbody>
-        {courses.map((course, index) => (
-          <tr key={course.courseId}>
-            <td className="border px-4 py-2">{course.courseCode}</td>
-            <td className="border px-4 py-2">{course.courseName}</td>
-            <td className="border px-4 py-2">{course.department}</td>
-            <td className="border px-4 py-2">
-              <input
-                type="number"
-                min="1"
-                value={course.sections}
-                onChange={(e) => {
-                  const newCourses = [...courses];
-                  newCourses[index].sections = parseInt(e.target.value) || 1;
-                  setCourses(newCourses);
-                }}
-                className="w-20 p-1 border rounded"
-              />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
-
+          {/* Selected Courses Table */}
+          {courses.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Selected Courses</h3>
+              <table className="w-full border">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border px-4 py-2">Course Code</th>
+                    <th className="border px-4 py-2">Name</th>
+                    <th className="border px-4 py-2">Department</th>
+                    <th className="border px-4 py-2">Sections</th> {/* New Column */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {courses.map((course, index) => (
+                    <tr key={course.courseId}>
+                      <td className="border px-4 py-2">{course.courseCode}</td>
+                      <td className="border px-4 py-2">{course.courseName}</td>
+                      <td className="border px-4 py-2">{course.department}</td>
+                      <td className="border px-4 py-2">
+                        <input
+                          type="number"
+                          min="1"
+                          value={course.sections}
+                          onChange={(e) => {
+                            const newCourses = [...courses];
+                            newCourses[index].sections = parseInt(e.target.value) || 1;
+                            setCourses(newCourses);
+                          }}
+                          className="w-20 p-1 border rounded"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Navigation Buttons */}
           <div className="mt-6 flex justify-between">

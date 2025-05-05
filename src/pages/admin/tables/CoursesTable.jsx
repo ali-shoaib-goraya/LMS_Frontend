@@ -8,25 +8,17 @@ const CoursesTable = () => {
   const [courses] = useState(mockCourses2);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [showBulkForm, setShowBulkForm] = useState(false);
   const [filters, setFilters] = useState({
-    courseId: "",
     courseName: "",
     courseCode: "",
     creditHours: "",
     isLab: "",
-    isCompulsory: "",
     isTheory: "",
-    connectedCourseId: "",
-    objective: "",
-    notes: "",
-    departmentId: "",
   });
 
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Handle checkbox selection
   const handleCheckboxChange = (id) => {
     setSelectedCourses((prevSelected) =>
       prevSelected.includes(id)
@@ -35,12 +27,20 @@ const CoursesTable = () => {
     );
   };
 
-  // Handle filter change
+  const handleSelectAll = () => {
+    const currentIds = currentCourses.map((course) => course.courseId);
+    const allSelected = currentIds.every((id) => selectedCourses.includes(id));
+    setSelectedCourses(
+      allSelected
+        ? selectedCourses.filter((id) => !currentIds.includes(id))
+        : [...new Set([...selectedCourses, ...currentIds])]
+    );
+  };
+
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
   };
 
-  // Filtering courses based on search input
   const filteredCourses = courses.filter((course) =>
     Object.keys(filters).every((key) =>
       filters[key]
@@ -62,7 +62,7 @@ const CoursesTable = () => {
         <h2 className="text-xl font-semibold text-gray-800">Course Details</h2>
       </div>
 
-      {/* Conditional Rendering for Forms */}
+      {/* Conditional Rendering for Form */}
       {showForm ? (
         <CoursesForm onBack={() => setShowForm(false)} />
       ) : (
@@ -84,25 +84,45 @@ const CoursesTable = () => {
 
           {/* Table */}
           <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-100">
-              <tr className="text-left border-b border-gray-300">
+            <thead className="bg-white-100">
+              <tr className="text-left border-b border-gray-300 text-center">
                 <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">Select</th>
-                {["courseId", "courseName", "courseCode", "creditHours", "isLab", "isCompulsory", "isTheory", "connectedCourseId", "departmentId"].map((key) => (
-                  <th key={key} className="border border-gray-300 px-4 py-3">
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                <th className="border border-gray-300 px-4 py-3 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="mb-1">Select</span>
                     <input
-                      type="text"
-                      value={filters[key]}
-                      onChange={(e) => handleFilterChange(e, key)}
-                      className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
-                      placeholder={`Search ${key}`}
-                    />
+                    type="checkbox"
+                    checked={
+                      currentCourses.length > 0 &&
+                      currentCourses.every((course) =>
+                        selectedCourses.includes(course.courseId)
+                      )
+                    }
+                    onChange={handleSelectAll}
+                    className="w-4 h-4"
+                  />
+                  </div>
+                </th>
+                {["courseName", "courseCode"].map((key) => (
+                  <th key={key} className="border border-gray-300 px-4 py-3 text-center">
+                    {key === "courseName" ? "Course Name" : "Course Code"}
+                    <div className="flex justify-center mt-1">
+                      <input
+                        type="text"
+                        value={filters[key]}
+                        onChange={(e) => handleFilterChange(e, key)}
+                        className="w-40 p-2 border rounded text-sm bg-gray-50"
+                      />
+                    </div>
                   </th>
                 ))}
+                <th className="border border-gray-300 px-4 py-3">Credit Hours</th>
+                <th className="border border-gray-300 px-4 py-3">Is Lab</th>
+                <th className="border border-gray-300 px-4 py-3">Is Theory</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {currentCourses.length > 0 ? (
                 currentCourses.map((course, index) => (
@@ -116,9 +136,13 @@ const CoursesTable = () => {
                         className="cursor-pointer w-4 h-4"
                       />
                     </td>
-                    {["courseId", "courseName", "courseCode", "creditHours", "isLab", "isCompulsory", "isTheory", "connectedCourseId", "departmentId"].map((key) => (
-                      <td key={key} className="border border-gray-300 px-4 py-3">{course[key]?.toString()}</td>
-                    ))}
+                    {["courseName", "courseCode", "creditHours", "isLab", "isTheory"].map(
+                      (key) => (
+                        <td key={key} className="border border-gray-300 px-4 py-3">
+                          {course[key]?.toString()}
+                        </td>
+                      )
+                    )}
                     <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
                       <button className="hover:opacity-80">
                         <img src={editIcon} alt="Edit" className="w-5 h-5" />

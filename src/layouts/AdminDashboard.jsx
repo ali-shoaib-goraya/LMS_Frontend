@@ -2,9 +2,20 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/student/Footer';
 
 function AdminDashboard() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  const accreditations = [
+    'Washington Accord',
+    'ABET',
+    'Seoul Accord',
+    'Sydney Accord',
+    'Dublin Accord',
+    'AACSB',
+    'ACBSP'
+  ];
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
@@ -33,6 +44,10 @@ function AdminDashboard() {
           <div className="p-6">
             <Outlet />
           </div>
+                                {/* Footer */}
+                                <div className={`${isSidebarVisible ? 'pl-10' : ''}`}>
+    <Footer accreditations={accreditations} />
+</div>
         </main>
       </div>
     </div>
