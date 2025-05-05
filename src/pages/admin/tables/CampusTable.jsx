@@ -9,6 +9,7 @@ const CampusTable = () => {
   const [campuses, setCampuses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingCampus, setEditingCampus] = useState(null);
+  const [selectedCampuses, setSelectedCampuses] = useState([]);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -17,6 +18,9 @@ const CampusTable = () => {
     city: "",
   });
 
+  const itemsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     fetchCampuses();
   }, []);
@@ -26,16 +30,11 @@ const CampusTable = () => {
       const response = await campusService.getAllCampuses();
       const campusData = response.data.data || [];
       setCampuses(campusData);
-      console.log("Fetched campuses:", response.data);
     } catch (error) {
       console.error("Failed to fetch campuses:", error);
     }
   };
 
-  const itemsPerPage = 20;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Checkbox handler
   const handleCheckboxChange = (id) => {
     setSelectedCampuses((prevSelected) =>
       prevSelected.includes(id)
@@ -44,28 +43,11 @@ const CampusTable = () => {
     );
   };
 
-  // Select All Checkbox handler
   const handleSelectAllChange = () => {
     if (selectedCampuses.length === campuses.length) {
       setSelectedCampuses([]);
     } else {
-      setSelectedCampuses(campuses.map((campus) => campus.id));
-    }
-  };
-
-  // Filtering Logic
-  useEffect(() => {
-    fetchCampuses();
-  }, []);
-
-  const fetchCampuses = async () => {
-    try {
-      const response = await campusService.getAllCampuses();
-      const campusData = response.data.data || [];
-      setCampuses(campusData);
-      console.log("Fetched campuses:", response.data);
-    } catch (error) {
-      console.error("Failed to fetch campuses:", error);
+      setSelectedCampuses(campuses.map((campus) => campus.campusId));
     }
   };
 
@@ -88,14 +70,13 @@ const CampusTable = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this campus?")) return;
-    console.log("Deleting campus with ID:", id);
     try {
       await campusService.deleteCampus(id);
+      toast.success("Campus deleted successfully");
       fetchCampuses();
     } catch (error) {
-      const message = error?.response?.data?.message || "An unexpected error occurred. Please try again.";
+      const message = error?.response?.data?.message || "An unexpected error occurred.";
       toast.error(message);
-      console.error("Failed to delete campus:", message);
     }
   };
 
@@ -130,12 +111,9 @@ const CampusTable = () => {
 
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-white">
-              <tr className="text-left border-b border-gray-300">
+              <tr className="text-center border-b border-gray-300">
                 <th className="border px-4 py-3">#</th>
                 <th className="border px-4 py-3">
-              <tr className="text-center border-b border-gray-300">
-                <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">
                   Select
                   <div className="flex justify-center mt-2">
                     <input
@@ -146,7 +124,7 @@ const CampusTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
+                <th className="border px-4 py-3">
                   Name
                   <input
                     type="text"
@@ -184,7 +162,7 @@ const CampusTable = () => {
                 </th>
                 <th className="border px-4 py-3">Address</th>
                 <th className="border px-4 py-3">Notes</th>
-                <th className="border px-4 py-3 text-center">Actions</th>
+                <th className="border px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -192,6 +170,14 @@ const CampusTable = () => {
                 filteredCampuses.map((campus, index) => (
                   <tr key={campus.campusId || index} className="hover:bg-gray-100 transition">
                     <td className="border px-4 py-3 text-center">{index + 1}</td>
+                    <td className="border px-4 py-3 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedCampuses.includes(campus.campusId)}
+                        onChange={() => handleCheckboxChange(campus.campusId)}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                    </td>
                     <td className="border px-4 py-3">{campus.name}</td>
                     <td className="border px-4 py-3">{campus.shortName}</td>
                     <td className="border px-4 py-3">{campus.type}</td>
@@ -210,7 +196,7 @@ const CampusTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center text-gray-600 py-4">
+                  <td colSpan="9" className="text-center text-gray-600 py-4">
                     No campuses found.
                   </td>
                 </tr>

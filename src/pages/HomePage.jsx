@@ -12,7 +12,7 @@ import Footer from "../components/student/Footer";
 import { useAuth } from "../auth/AuthContext";
 
 const HomePage = () => {
-  const { initializeAuth } = useAuthInit();
+
 const accreditations = [
   'Washington Accord',
   'ABET',
@@ -23,9 +23,6 @@ const accreditations = [
   'ACBSP'
   ];
 
-  useEffect(() => {
-    initializeAuth();
-  }, []);
 
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
