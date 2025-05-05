@@ -3,14 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import InputField from './InputField';
 import EyeIcon from '@/assets/eye.png';
 import EyeSlashIcon from '@/assets/eyeslash.png';
-import { useLoginMutation } from "../../app/api/authApiSlice";
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../../features/auth/authSlice';
-import { saveToCookies } from '../../utils/cookies';
-import {jwtDecode} from 'jwt-decode';
+import { useAuth } from '../../auth/AuthContext';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 function LoginForm({ userType }) {
-  const dispatch = useDispatch();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -18,9 +16,9 @@ function LoginForm({ userType }) {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const [login, { isLoading }] = useLoginMutation();
 
   const validate = () => {
     const newErrors = {};
@@ -42,36 +40,54 @@ function LoginForm({ userType }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    
+    setIsLoading(true);
 
     try {
-      const response = await login({
+      const response = await axios.post('https://localhost:7244/api/auth/login', {
         email: formData.username,
         password: formData.password,
         type: userType,
         rememberMe: formData.rememberMe,
-      }).unwrap();
+      });
 
-      if (response){
-        saveToCookies('accessToken', response.accessToken);
-        saveToCookies('refreshToken', response.refreshToken);
-        var decoded = jwtDecode(response.accessToken);
-        const user = {
+      console.log("Login Response", response.data); 
+
+      if (response.data) {
+        const { accessToken, refreshToken } = response.data.data;
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token', refreshToken);
+        
+        const decoded = jwtDecode(accessToken);
+        const userData = {
           UserId: decoded.UserId,
           Email: decoded.Email,
           Type: decoded.Type,
         };
-        dispatch(setCredentials({ user: user, accessToken: response.accessToken }));
-        console.log ("Login Response", response);}
-
-      setFormData({ username: '', password: '', rememberMe: false });
-      navigate(userType === 'Student' ? '/student' : '/dashboard');
+        
+        login(accessToken, userData);
+        setFormData({ username: '', password: '', rememberMe: false });
+        
+        // Redirect based on user type
+        if (userData.Type === 'Student') {
+          navigate('/student');
+        } else if (userData.Type === 'Teacher') {
+          navigate('/teacher');
+        } else if (userData.Type === 'CampusAdmin') {
+          navigate('/dashboard');
+        }
+      }
     } catch (err) {
-      console.log("Backend Server Error",err);
+      console.log("Login Error", err);
       const errorMessages = {
         400: 'Missing Username or Password',
-        401: 'Unauthorized',
+        401: 'Invalid Username or Password',
       };
-      setErrors({ form: errorMessages[err.originalStatus] || 'Login Failed' });
+      setErrors({ 
+        form: errorMessages[err.response?.status] || 'Login Failed' 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 

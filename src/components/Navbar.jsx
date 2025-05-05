@@ -1,22 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import BellIcon from '../assets/bell.png';
 import Bars3Icon from '../assets/bars.png';
 import logo from '../assets/logo.png';
 import ProfileImage from '../assets/profile.jpg';
-import { FaUser, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
-import { useDispatch } from 'react-redux';
-import { logOut } from '../features/auth/authSlice';  
-import { selectCurrentUser } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
+import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { mockSemesters } from '../MockData/mockSemesters'; // Import mock semesters (adjust path as needed)
+import { mockSemesters } from '../MockData/mockSemesters'; 
+import { AuthContext } from '../auth/AuthContext';
 
 function Navbar({ onMenuClick, selectedSemester, onSemesterChange }) {
-  const user = useSelector(selectCurrentUser); // Get the user object
-  const userName = user ? user.Email : "Guest"; // Fallback to "Guest" if user is null
+  const { user, logout } = useContext(AuthContext);
+  const userName = user ? user.Email : "Guest";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -24,12 +20,11 @@ function Navbar({ onMenuClick, selectedSemester, onSemesterChange }) {
   };
 
   const handleSignOut = () => {
-    dispatch(logOut());
+    logout(); // Context-based logout
     setIsDropdownOpen(false);
     navigate("/faculty-login");
   };
-  
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -61,7 +56,7 @@ function Navbar({ onMenuClick, selectedSemester, onSemesterChange }) {
           {/* Center Section */}
           <button
             type="button"
-            className="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+            className="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none"
             onClick={onMenuClick}
           >
             <img src={Bars3Icon} alt="Menu" className="h-8 w-8" />

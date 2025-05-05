@@ -1,9 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
 import { Navigate } from "react-router-dom";
-import useAuthInit from "../hooks/useAuthInit";
 import { useEffect } from "react";
 import coursemanagement from "../assets/coursemanagement.jpg";
 import timetable from "../assets/timetable.png";
@@ -11,26 +8,19 @@ import attendance from "../assets/attendance.png";
 import progresstracking from "../assets/progresstracking.png";
 import discussionforum from "../assets/discussionforum.png";
 import namal from "../assets/namal.jpg";
-
+import { useAuth } from "../auth/AuthContext";
 
 const HomePage = () => {
-  const { initializeAuth } = useAuthInit();
-
-  useEffect(() => {
-    initializeAuth();
-  }, []);
-
   const navigate = useNavigate();
-  const token = useSelector(selectCurrentToken);
-  const user = useSelector(selectCurrentUser);
-  // console.log('USER:', user);
-  // console.log("tOKEN:", token);
-  if (token && user?.Type === 'Faculty') {
-    return <Navigate to="/dashboard" />;
-  }
-
-  if (token && user?.Type === 'Student') {
-    return <Navigate to="/student" />;
+  const { accessToken, user } = useAuth();
+  
+  // Handle authentication redirects
+  if (accessToken) {
+    if (user?.Type === 'Faculty' || user?.Type === 'CampusAdmin') {
+      return <Navigate to="/dashboard" />;
+    } else if (user?.Type === 'Student') {
+      return <Navigate to="/student" />;
+    }
   }
 
   return (
@@ -53,11 +43,10 @@ const HomePage = () => {
         </div>
       </header>
 
-<div
-  className="relative flex flex-col items-center justify-center py-32 bg-cover bg-center text-white"
-  style={{ backgroundImage: `url(${namal})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '80vh' }}
->
-
+      <div
+        className="relative flex flex-col items-center justify-center py-32 bg-cover bg-center text-white"
+        style={{ backgroundImage: `url(${namal})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '80vh' }}
+      >
         <h1 className="text-5xl font-bold mb-6">Welcome to University LMS</h1>
         <p className="text-lg mb-10 max-w-3xl text-center">
           Transform your learning experience with our state-of-the-art Learning Management System that empowers students, faculty, and administrators to succeed.
@@ -72,40 +61,40 @@ const HomePage = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-primary-700 mb-8">Why Choose Our LMS?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <img src={coursemanagement} 
-              alt="Course Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800">Course Management</h3>
-            <p className="text-gray-600 mt-2">Create, update, and manage courses seamlessly for all academic levels.</p>
-          </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={coursemanagement} 
+                alt="Course Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Course Management</h3>
+              <p className="text-gray-600 mt-2">Create, update, and manage courses seamlessly for all academic levels.</p>
+            </div>
 
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <img src={timetable} 
-              alt="Timetable Generation" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800">Timetable Generation</h3>
-            <p className="text-gray-600 mt-2">Automatically generate class and lab schedules to save time and avoid clashes.</p>
-          </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={timetable} 
+                alt="Timetable Generation" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Timetable Generation</h3>
+              <p className="text-gray-600 mt-2">Automatically generate class and lab schedules to save time and avoid clashes.</p>
+            </div>
 
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <img src={attendance} 
-              alt="Attendance Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800">Attendance Management</h3>
-            <p className="text-gray-600 mt-2">Track student attendance lab-wise with smart summaries and totals.</p>
-          </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={attendance} 
+                alt="Attendance Management" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Attendance Management</h3>
+              <p className="text-gray-600 mt-2">Track student attendance lab-wise with smart summaries and totals.</p>
+            </div>
 
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <img src={progresstracking} 
-              alt="Progress Tracking" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800">Progress Tracking</h3>
-            <p className="text-gray-600 mt-2">Monitor student performance and visualize academic growth over time.</p>
-          </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={progresstracking} 
+                alt="Progress Tracking" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Progress Tracking</h3>
+              <p className="text-gray-600 mt-2">Monitor student performance and visualize academic growth over time.</p>
+            </div>
 
-          <div className="p-6 bg-white shadow-md rounded-lg">
-            <img src={discussionforum} 
-              alt="Collaboration Tools" className="w-full h-48 object-cover rounded-t-lg mb-4" />
-            <h3 className="text-xl font-semibold text-gray-800">Faculty & Student Collaboration</h3>
-            <p className="text-gray-600 mt-2">Enable smooth communication between faculty and students for better learning.</p>
-          </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={discussionforum} 
+                alt="Collaboration Tools" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Faculty & Student Collaboration</h3>
+              <p className="text-gray-600 mt-2">Enable smooth communication between faculty and students for better learning.</p>
+            </div>
           </div>
         </div>
       </section>

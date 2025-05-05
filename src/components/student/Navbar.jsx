@@ -1,33 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BellIcon from '@/assets/bell.png'; 
 import Bars3Icon from '@/assets/bars.png'; 
 import logo from '@/assets/logo.png';
-import ProfileImage from '@/assets/profile.jpg'; // Assuming you have a profile image
-import { FaUser, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
-import { useDispatch } from 'react-redux';
-import { logOut } from '../../features/auth/authSlice';  
-import { selectCurrentUser } from '../../features/auth/authSlice';
-import { useSelector } from 'react-redux';
+import ProfileImage from '@/assets/profile.jpg';
+import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useAuth } from '../../auth/AuthContext'; 
 
 function Navbar({ onMenuClick }) {
-  const user = useSelector(selectCurrentUser); // Get the user object
-    const userName = user ? user.Email : "Guest"; // Fallback to "Guest" if user is null
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-  
-    const toggleDropdown = () => {
-      setIsDropdownOpen(!isDropdownOpen);
-    };
-  
-    const handleSignOut = () => {
-      dispatch(logOut());
-      setIsDropdownOpen(false);
-      navigate("/faculty-login");
-    };
-    
+  const { user, logout } = useAuth();
+  const userName = user ? user.Email : "Guest";
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleSignOut = () => {
+    logout();
+    setIsDropdownOpen(false);
+    navigate("/faculty-login");
+  };
+
   return (
     <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
       <div className="w-full px-6 sm:px-8">
@@ -53,7 +48,8 @@ function Navbar({ onMenuClick }) {
             <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
               <img src={BellIcon} alt="Notifications" className="h-8 w-8" />
             </button>
-            {/* Profile Image */}
+
+            {/* Profile Dropdown */}
             <div className="relative">
               <img
                 src={ProfileImage}
@@ -75,19 +71,21 @@ function Navbar({ onMenuClick }) {
                       <p className="text-gray-800 font-medium">{userName}</p>
                     </div>
                   </div>
+
                   {/* Menu Options */}
                   <button
                     className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={() => alert("Profile clicked")}
                   >
-                  <FaUser className="mr-2" /> 
+                    <FaUser className="mr-2" />
                     Profile
                   </button>
+
                   <button
                     className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={handleSignOut}
                   >
-                  <FaSignOutAlt className="mr-2" />
+                    <FaSignOutAlt className="mr-2" />
                     Sign Out
                   </button>
                 </div>
