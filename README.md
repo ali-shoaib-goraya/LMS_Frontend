@@ -71,36 +71,24 @@ Welcome to the **Learning Management System (LMS)** frontend — a powerful, rol
 ### 🔧 Installation
 
 ```bash
-git clone https://github.com/your-org/fyp-frontend.git
-cd fyp-frontend
+git clone https://github.com/ali-shoaib-goraya/LMS_Frontend.git
+cd LMS_Frontend
 npm install
 ````
 
 ### ▶️ Run the Application
 
 ```bash
-npm start
+npm run dev
 ```
 
-> App will be available at: `http://localhost:3000`
+> App will be available at: `http://localhost:5173`
 
-### 🔐 Environment Setup
-
-Create a `.env` file in the root directory with the following:
-
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_BLOB_STORAGE_URL=your_azure_blob_storage_url
-```
-
-Replace with your actual API and blob storage endpoints.
-
----
 
 ## 👨‍💻 Contributors
 
-* **Ali Shoaib** – Frontend Architecture & LMS Workflow
-* **Muhammad Bilal** – UI/UX, Role Management, Student Experience
+* **Ali Shoaib** – Frontend Architecture & LMS Workflow, Backend Integration and State Management
+* **Muhammad Bilal** – UI/UX, static screens development and Routing of application.
 
 ---
 
