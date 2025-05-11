@@ -6,7 +6,7 @@ Welcome to the **Learning Management System (LMS)** frontend — a powerful, rol
 
 ## 📽️ Demo
 
-🎬 [Watch the Demo Video](#) *(Replace with your actual link)*
+🎬 [Watch the Demo Video](#) https://www.youtube.com/watch?v=iNSvIdEwFKw
 
 ---
 
