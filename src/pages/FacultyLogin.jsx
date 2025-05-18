@@ -1,28 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import LoginForm from '../components/auth/LoginForm';
 import logo from '../assets/logo.png'; 
-import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import useAuthInit from '../hooks/useAuthInit';
-import { useEffect } from 'react';
+import { useAuth } from '../auth/AuthContext';
 
 function FacultyLogin() {
-  const { initializeAuth } = useAuthInit();
+  const { accessToken, user } = useAuth();
   
-    useEffect(() => {
-      initializeAuth();
-    }, []);
-  
-  const token = useSelector(selectCurrentToken);
-  const user = useSelector(selectCurrentUser);
-
-  if (token && user?.Type === 'Faculty') {
-    return <Navigate to="/dashboard" />;
-  }
-
-  if (token && user?.Type === 'Student') {
-    return <Navigate to="/student" />;
+  // Handle authentication redirects
+  if (accessToken) {
+    if (user?.Type === 'Faculty' || user?.Type === 'CampusAdmin') {
+      return <Navigate to="/dashboard" />;
+    } else if (user?.Type === 'Student') {
+      return <Navigate to="/student" />;
+    } else if (user?.Type === 'Teacher') {
+      return <Navigate to="/teacher" />;
+    }
   }
 
   return (

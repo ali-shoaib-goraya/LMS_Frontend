@@ -6,31 +6,22 @@ import deleteIcon from "../../../assets/trash.png";
 
 const SemesterTable = () => {
   const [semesters] = useState(mockSemesters);
-  const [selectedSemesters, setSelectedSemesters] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
   const [filters, setFilters] = useState({
     name: "",
-    academicYear: "",
+    status: "",
   });
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
-
-  const handleCheckboxChange = (id) => {
-    setSelectedSemesters((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((semesterId) => semesterId !== id)
-        : [...prevSelected, id]
-    );
-  };
 
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
   };
 
   const filteredSemesters = semesters.filter((semester) =>
-    ["name", "academicYear"].every((key) =>
+    ["name", "status"].every((key) =>
       filters[key]
         ? semester[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
         : true
@@ -42,14 +33,6 @@ const SemesterTable = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentSemesters = filteredSemesters.slice(startIndex, endIndex);
-
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedSemesters(currentSemesters.map((s) => s.id));
-    } else {
-      setSelectedSemesters([]);
-    }
-  };
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -80,21 +63,6 @@ const SemesterTable = () => {
 
                 <th className="border border-gray-300 px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <span className="mb-1">Select</span>
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4"
-                      onChange={handleSelectAll}
-                      checked={
-                        currentSemesters.length > 0 &&
-                        currentSemesters.every((s) => selectedSemesters.includes(s.id))
-                      }
-                    />
-                  </div>
-                </th>
-
-                <th className="border border-gray-300 px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
                     <span className="mb-1">Name</span>
                     <input
                       type="text"
@@ -107,11 +75,11 @@ const SemesterTable = () => {
 
                 <th className="border border-gray-300 px-4 py-3 text-center">
                   <div className="flex flex-col items-center">
-                    <span className="mb-1">Year</span>
+                    <span className="mb-1">Status</span>
                     <input
                       type="text"
-                      value={filters.academicYear}
-                      onChange={(e) => handleFilterChange(e, "academicYear")}
+                      value={filters.status}
+                      onChange={(e) => handleFilterChange(e, "status")}
                       className="w-40 p-1 border rounded text-sm bg-gray-50"
                     />
                   </div>
@@ -119,6 +87,7 @@ const SemesterTable = () => {
 
                 <th className="border border-gray-300 px-4 py-3 text-center">Start Date</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">End Date</th>
+                <th className="border border-gray-300 px-4 py-3 text-center">Notes</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
@@ -128,18 +97,13 @@ const SemesterTable = () => {
                 currentSemesters.map((semester, index) => (
                   <tr key={semester.id} className="text-center hover:bg-gray-100 transition">
                     <td className="border border-gray-300 px-4 py-3">{startIndex + index + 1}</td>
-                    <td className="border border-gray-300 px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedSemesters.includes(semester.id)}
-                        onChange={() => handleCheckboxChange(semester.id)}
-                        className="cursor-pointer w-4 h-4"
-                      />
-                    </td>
                     <td className="border border-gray-300 px-4 py-3">{semester.name}</td>
-                    <td className="border border-gray-300 px-4 py-3">{semester.academicYear}</td>
+                    <td className="border border-gray-300 px-4 py-3">{semester.status}</td>
                     <td className="border border-gray-300 px-4 py-3">{semester.startDate}</td>
                     <td className="border border-gray-300 px-4 py-3">{semester.endDate}</td>
+                    <td className="border border-gray-300 px-4 py-3 max-w-xs truncate" title={semester.notes}>
+                      {semester.notes}
+                    </td>
                     <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
                       <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
                         <img src={editIcon} alt="Edit" className="w-5 h-5" />

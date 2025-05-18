@@ -1,405 +1,253 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import programService from "../../../services/programService";
+import { toast } from "react-toastify";
 
-const ProgramForm = ({onBack}) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    shortName: "",
-    sessionType: "",
-    department: "",
-    programlevel: "",
-    noOfSessions: "",
-    programType: "",
-    marks: "",
-    students: "",
-    assessmentMethod: "",
-    learningTypeCategory: "",
-    vision: "",
-    mission: "",
-    admissionCriteriaInfo: "",
-    passingCriteriaInfo: "",
+// Validation schema
+const schema = yup.object().shape({
+  programName: yup.string().required("Program name is required"),
+  code: yup.string().required("Code is required"),
+  degreeType: yup.string().required("Degree type is required"),
+  creditRequired: yup
+    .number()
+    .typeError("Credit must be a number")
+    .required("Credit is required")
+    .min(0, "Credit must be positive"),
+  departmentId: yup.number().required("Department is required"),
+  description: yup.string().nullable(),
+  duration: yup.string().nullable(),
+});
+
+const ProgramForm = ({ onBack, program, onSubmitSuccess }) => {
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const isEditMode = program !== null;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      programName: "",
+      code: "",
+      degreeType: "",
+      creditRequired: "",
+      departmentId: "",
+      description: "",
+      duration: "",
+    },
   });
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  // Fetch departments on component mount
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  // Set form values if editing
+  useEffect(() => {
+    if (program) {
+      setValue("programName", program.programName);
+      setValue("code", program.code);
+      setValue("degreeType", program.degreeType);
+      setValue("creditRequired", program.creditRequired);
+      setValue("departmentId", program.departmentId);
+      setValue("description", program.description);
+      setValue("duration", program.duration);
+    }
+  }, [program, setValue]);
+
+  // Fetch departments for dropdown
+  const fetchDepartments = async () => {
+    try {
+      setLoading(true);
+      const response = await programService.getDepartments();
+      setDepartments(response.data.data || []);
+    } catch (error) {
+      console.error("Failed to fetch departments:", error);
+      toast.error("Failed to load departments. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
-  };
-
-  const validateForm = () => {
-    const requiredFields = [
-      "name",
-      "shortName",
-      "sessionType",
-      "department",
-      "programlevel",
-      "noOfSessions",
-      "programType",
-      "marks",
-      "students",
-      "assessmentMethod",
-      "learningTypeCategory",
-      "vision",
-      "mission",
-      "admissionCriteriaInfo",
-      "passingCriteriaInfo",
-    ];
-    return requiredFields.every((field) => formData[field]);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-
-    if (validateForm()) {
-      alert("Form submitted successfully!");
-      setFormData({
-        name: "",
-        shortName: "",
-        sessionType: "",
-        department: "",
-        programlevel: "",
-        noOfSessions: "",
-        programType: "",
-        marks: "",
-        students: "",
-        assessmentMethod: "",
-        learningTypeCategory: "",
-        vision: "",
-        mission: "",
-        admissionCriteriaInfo: "",
-        passingCriteriaInfo: "",
-      });
-      setIsSubmitted(false);
-    } else {
-      alert("Please fill in all required fields.");
+  const onSubmit = async (data) => {
+    try {
+      setSubmitting(true);
+      
+      if (isEditMode) {
+        // Update existing program
+        await programService.updateProgram(program.programId, data);
+        onSubmitSuccess(true); // Pass true to indicate update
+      } else {
+        // Create new program
+        await programService.createProgram(data);
+        onSubmitSuccess(false); // Pass false to indicate create
+      }
+      
+      reset();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error(isEditMode ? "Failed to update program" : "Failed to create program");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-<div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
-      {/* First Row */}
-      <div className="bg-white border border-gray-300 rounded-md p-6 shadow-md">
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.name
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Short Name
-              </label>
-              <input
-                type="text"
-                name="shortName"
-                value={formData.shortName}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.shortName
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Session Type
-              </label>
-              <input
-                type="text"
-                name="sessionType"
-                placeholder="Semester"
-                value={formData.sessionType}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.sessionType
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
+    <div className="w-full max-w-4xl bg-white p-6 shadow-md rounded-md">
+      <h2 className="text-xl font-semibold mb-4">
+        {isEditMode ? "Edit Program" : "Create New Program"}
+      </h2>
+      
+      {loading ? (
+        <div className="text-center py-8">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
           </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField 
+              label="Program Name" 
+              name="programName" 
+              register={register} 
+              error={errors.programName} 
+            />
+            
+            <InputField 
+              label="Code" 
+              name="code" 
+              register={register} 
+              error={errors.code} 
+            />
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Degree Type
+              </label>
+              <select
+                {...register("degreeType")}
+                className={`w-full border ${
+                  errors.degreeType ? "border-red-500" : "border-gray-300"
+                } rounded-md p-2 text-sm`}
+              >
+                <option value="">- Select Degree Type -</option>
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Graduate">Graduate</option>
+                <option value="Postgraduate">Postgraduate</option>
+                <option value="Doctorate">Doctorate</option>
+              </select>
+              {errors.degreeType && (
+                <p className="text-red-500 text-xs mt-1">{errors.degreeType.message}</p>
+              )}
+            </div>
 
-          {/* Second Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-3/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
+            <InputField
+              label="Credit Required"
+              name="creditRequired"
+              type="number"
+              register={register}
+              error={errors.creditRequired}
+            />
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Department
               </label>
               <select
-                name="department"
-                value={formData.department}
-                onChange={handleInputChange}
+                {...register("departmentId")}
                 className={`w-full border ${
-                  isSubmitted && !formData.department
-                    ? "border-red-500"
-                    : "border-gray-300"
+                  errors.departmentId ? "border-red-500" : "border-gray-300"
                 } rounded-md p-2 text-sm`}
-                required
               >
-                <option value="">- Select -</option>
-                <option value="Math">Mathematics</option>
-                <option value="Science">Science</option>
+                <option value="">- Select Department -</option>
+                {departments.map((department) => (
+                  <option 
+                    key={department.departmentId} 
+                    value={department.departmentId}
+                  >
+                    {department.departmentName}
+                  </option>
+                ))}
               </select>
+              {errors.departmentId && (
+                <p className="text-red-500 text-xs mt-1">{errors.departmentId.message}</p>
+              )}
             </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Program Level
-              </label>
-              <select
-                name="programlevel"
-                value={formData.programlevel}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.programlevel
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="Beginning">Beginning</option>
-                <option value="Intermediate">Intermediate</option>
-              </select>
-            </div>
+            
+            <InputField 
+              label="Duration (e.g., 4 years)" 
+              name="duration" 
+              register={register} 
+              error={errors.duration} 
+            />
+          </div>
+          
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              {...register("description")}
+              rows="4"
+              className={`w-full border ${
+                errors.description ? "border-red-500" : "border-gray-300"
+              } rounded-md p-2 text-sm`}
+            ></textarea>
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>
+            )}
           </div>
 
-          {/* Third Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                No. of Sessions
-              </label>
-              <input
-                type="number"
-                name="noOfSessions"
-                placeholder="2"
-                value={formData.noOfSessions}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.noOfSessions
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Program Type
-              </label>
-              <select
-                name="programType"
-                value={formData.programType}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.programType
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="Mid">Mid</option>
-                <option value="Final">Final</option>
-              </select>
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Marks %
-              </label>
-              <input
-                type="number"
-                name="marks"
-                placeholder="50"
-                value={formData.marks}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.marks
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Students %
-              </label>
-              <input
-                type="number"
-                name="students"
-                placeholder="50"
-                value={formData.students}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.students
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Fourth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Assessment Method
-              </label>
-              <input
-                type="text"
-                name="assessmentMethod"
-                placeholder="None"
-                value={formData.assessmentMethod}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.assessmentMethod
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Learning Type Category
-              </label>
-              <input
-                type="text"
-                name="learningTypeCategory"
-                placeholder="Blooms Taxonomy vol.1"
-                value={formData.learningTypeCategory}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.learningTypeCategory
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Fifth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/2 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Vision
-              </label>
-              <input
-                type="text"
-                name="vision"
-                value={formData.vision}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.vision
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-2/2 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Mission
-              </label>
-              <input
-                type="text"
-                name="mission"
-                value={formData.mission}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.mission
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Sixth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-1/2 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Admission Criteria Info
-              </label>
-              <input
-                type="text"
-                name="admissionCriteriaInfo"
-                value={formData.admissionCriteriaInfo}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.admissionCriteriaInfo
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/2 px-2">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Passing Criteria Info
-              </label>
-              <input
-                type="text"
-                name="passingCriteriaInfo"
-                value={formData.passingCriteriaInfo}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.passingCriteriaInfo
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-
-
-          {/* Buttons */}
-          <div className="flex gap-4">
-            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-              Submit
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
+            >
+              {submitting ? (
+                "Processing..."
+              ) : isEditMode ? (
+                "Update Program"
+              ) : (
+                "Create Program"
+              )}
             </button>
-            <button type="button" onClick={onBack} className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
+            <button
+              type="button"
+              onClick={onBack}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            >
               Cancel
             </button>
           </div>
         </form>
-      </div>
+      )}
     </div>
   );
 };
+
+// Reusable Input Field Component
+const InputField = ({ label, name, register, error, type = "text" }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <input
+      {...register(name)}
+      type={type}
+      className={`w-full border ${
+        error ? "border-red-500" : "border-gray-300"
+      } rounded-md p-2 text-sm`}
+    />
+    {error && <p className="text-red-500 text-xs mt-1">{error.message}</p>}
+  </div>
+);
 
 export default ProgramForm;

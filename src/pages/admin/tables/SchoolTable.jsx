@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { mockSchools } from "../../../MockData/mockSchools";
+import React, { useState, useEffect } from "react";
+import schoolService from "../../../services/schoolService";
 import SchoolForm from "../Forms/SchoolForm";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
 
 const SchoolTable = () => {
-  const [schools] = useState(mockSchools);
-  const [selectedSchools, setSelectedSchools] = useState([]);
+  const [schools, setSchools] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [editSchool, setEditSchool] = useState(null);
+  const [totalItems, setTotalItems] = useState(0);
 
   const [filters, setFilters] = useState({
     schoolName: "",
@@ -15,57 +16,64 @@ const SchoolTable = () => {
     city: "",
   });
 
-  const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [loading, setLoading] = useState(false);
 
-  const handleCheckboxChange = (id) => {
-    setSelectedSchools((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((schoolId) => schoolId !== id)
-        : [...prevSelected, id]
-    );
-  };
-
-  const handleSelectAll = () => {
-    const currentPageIds = currentSchools.map((school) => school.id);
-    const allSelected = currentPageIds.every((id) =>
-      selectedSchools.includes(id)
-    );
-
-    if (allSelected) {
-      setSelectedSchools((prevSelected) =>
-        prevSelected.filter((id) => !currentPageIds.includes(id))
-      );
-    } else {
-      setSelectedSchools((prevSelected) => [
-        ...prevSelected,
-        ...currentPageIds.filter((id) => !prevSelected.includes(id)),
-      ]);
+  const fetchSchools = async () => {
+    setLoading(true);
+    try {
+      const { data } = await schoolService.getAllSchools({
+        page: currentPage,
+        pageSize: itemsPerPage,
+        name: filters.name,
+        shortName: filters.shortName,
+        city: filters.city,
+      });
+      setSchools(data.data.items || []);
+      setTotalItems(data.data.totalCount || 0);
+    } catch (error) {
+      console.error("Failed to fetch schools:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchSchools();
+  }, [currentPage, filters]);
 
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
     setCurrentPage(1);
+    setCurrentPage(1);
   };
 
-  const filteredSchools = schools.filter((school) =>
-    Object.keys(filters).every((key) =>
-      filters[key]
-        ? school[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
-        : true
-    )
-  );
+  const handleEdit = (school) => {
+    setEditSchool(school);
+    setShowForm(true);
+  };
 
-  const totalItems = filteredSchools.length;
+  const handleDelete = async (schoolId) => {
+    const confirm = window.confirm("Are you sure you want to delete this school?");
+    if (!confirm) return;
+
+    try {
+      await schoolService.deleteSchool(schoolId);
+      fetchSchools(); // refresh list
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
+  const handleFormSubmit = () => {
+    setShowForm(false);
+    setEditSchool(null);
+    fetchSchools(); // refresh list after add/edit
+    
+  };
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentSchools = filteredSchools.slice(startIndex, endIndex);
-
-  const isCurrentPageFullySelected = currentSchools.every((school) =>
-    selectedSchools.includes(school.id)
-  );
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -74,16 +82,28 @@ const SchoolTable = () => {
       </div>
 
       {showForm ? (
-        <SchoolForm onBack={() => setShowForm(false)} />
+       <SchoolForm
+       onBack={() => {
+         setShowForm(false);
+         setEditSchool(null);
+       }}
+       onSaveSuccess={handleFormSubmit}
+       editData={editSchool} // <-- corrected prop name
+     />
+     
       ) : (
         <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg overflow-x-auto">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
-              Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
+              Showing {(currentPage - 1) * itemsPerPage + 1}-
+              {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
             </h2>
             <button
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setShowForm(true);
+                setEditSchool(null); // clear if previously editing
+              }}
             >
               Add School
             </button>
@@ -92,28 +112,15 @@ const SchoolTable = () => {
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
-                <th className="border border-gray-300 px-4 py-3 text-center">#</th>
-                <th className="border border-gray-300 px-4 py-3 text-center">
-                  <div className="flex flex-col items-center">
-                    <span className="mb-1">Select</span>
-                    <input
-                      type="checkbox"
-                      checked={isCurrentPageFullySelected}
-                      onChange={handleSelectAll}
-                      className="cursor-pointer w-4 h-4"
-                    />
-                  </div>
-                </th>
-                <th className="border border-gray-300 px-4 py-3 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <span className="mb-1">Name</span>
-                    <input
-                      type="text"
-                      value={filters.schoolName}
-                      onChange={(e) => handleFilterChange(e, "schoolName")}
-                      className="w-36 p-1 border rounded text-sm text-center bg-gray-50"
-                    />
-                  </div>
+                <th className="border border-gray-300 px-4 py-3">#</th>
+                <th className="border border-gray-300 px-4 py-3">
+                  Name
+                  <input
+                    type="text"
+                    value={filters.name}
+                    onChange={(e) => handleFilterChange(e, "name")}
+                    className="w-full mt-1 p-2 border rounded text-sm bg-gray-50"
+                  />
                 </th>
                 <th className="border border-gray-300 px-4 py-3 text-center">
                   <div className="flex flex-col items-center justify-center">
@@ -137,44 +144,49 @@ const SchoolTable = () => {
                     />
                   </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3 text-center">Address</th>
+                <th className="border border-gray-300 px-4 py-3">Address</th>
+                <th className="border border-gray-300 px-4 py-3">Is Academic</th>
+                <th className="border border-gray-300 px-4 py-3">Notes</th>
                 <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {currentSchools.length > 0 ? (
-                currentSchools.map((school, index) => (
-                  <tr key={school.id} className="text-center hover:bg-gray-100 transition">
+              {loading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-gray-600">
+                    Loading...
+                  </td>
+                </tr>
+              ) : schools.length > 0 ? (
+                schools.map((school, index) => (
+                  <tr key={school.schoolId} className="text-center hover:bg-gray-100 transition">
                     <td className="border border-gray-300 px-4 py-3">
-                      {startIndex + index + 1}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedSchools.includes(school.id)}
-                        onChange={() => handleCheckboxChange(school.id)}
-                        className="cursor-pointer w-4 h-4"
-                      />
+                      {(currentPage - 1) * itemsPerPage + index + 1}
                     </td>
                     <td className="border border-gray-300 px-4 py-3">{school.schoolName}</td>
                     <td className="border border-gray-300 px-4 py-3">{school.shortName}</td>
                     <td className="border border-gray-300 px-4 py-3">{school.city}</td>
                     <td className="border border-gray-300 px-4 py-3">{school.address}</td>
                     <td className="border border-gray-300 px-4 py-3">
-                      <div className="flex justify-center gap-2">
-                        <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
-                          <img src={editIcon} alt="Edit" className="w-5 h-5" />
-                        </button>
-                        <button className="hover:opacity-80">
-                          <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
-                        </button>
-                      </div>
+                      {school.academic ? "Yes" : "No"}
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3">{school.notes || "-"}</td>
+                    <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
+                      <button className="hover:opacity-80" onClick={() => handleEdit(school)}>
+                        <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                      </button>
+                      <button
+                        className="hover:opacity-80"
+                        onClick={() => handleDelete(school.schoolId)}
+                      >
+                        <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center text-gray-600 py-4">
+                  <td colSpan="8" className="text-center text-gray-600 py-4">
                     No schools found.
                   </td>
                 </tr>
@@ -191,17 +203,20 @@ const SchoolTable = () => {
             >
               «
             </button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-2 border rounded mx-1 ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => {
+              const pageNum = i + 1;
+              return (
+                <button
+                  key={`page-${pageNum}`}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-3 py-2 border rounded mx-1 ${
+                    currentPage === pageNum ? "bg-blue-500 text-white" : "bg-gray-200"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}

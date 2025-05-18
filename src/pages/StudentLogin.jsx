@@ -1,36 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import LoginForm from '../components/auth/LoginForm';
 import logo from '../assets/logo.png';
-import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice';
-import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import useAuthInit from '../hooks/useAuthInit';
-import { useEffect } from 'react';
+import { useAuth } from '../auth/AuthContext';
 
 function StudentLogin() {
-  const { initializeAuth } = useAuthInit();
-
-  useEffect(() => {
-    initializeAuth();
-  }, []);
-  
-  const token = useSelector(selectCurrentToken);
-  const user = useSelector(selectCurrentUser);
   const navigate = useNavigate();
+  const { accessToken, user } = useAuth();
 
-  if (token && user?.Type === 'Faculty') {
-    return <Navigate to="/dashboard" />;
+  // Handle authentication redirects
+  if (accessToken) {
+    if (user?.Type === 'Faculty' || user?.Type === 'CampusAdmin') {
+      return <Navigate to="/dashboard" />;
+    } else if (user?.Type === 'Student') {
+      return <Navigate to="/student" />;
+    }
   }
 
-  if (token && user?.Type === 'Student') {
-    return <Navigate to="/student" />;
-  }
-  
-
-  // Function to handle successful login
-  const handleLoginSuccess = () => {
-    navigate('/student');
-  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center">
       <div className="w-full max-w-md space-y-6">
@@ -49,7 +36,6 @@ function StudentLogin() {
         <div className="bg-white py-8 px-6 shadow-lg rounded-lg border border-gray-200">
           <LoginForm userType="Student" />
         </div>
-
       </div>
     </div>
   );

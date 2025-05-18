@@ -1,469 +1,151 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import batchService from "../../../services/batchService";
 
-const ProgramForm = ({onBack}) => {
+const ProgramBatchForm = ({ onBack, batchToEdit }) => {
   const [formData, setFormData] = useState({
-    program: "",
-    academicYear: "",
-    sections: "",
     programBatch: "",
-    noOfSessions: "",
-    ploPassingThreshhold: "",
-    status: "",
-    useInObe: "",
-    marks: "",
+    programId: "",
+    startDate: "",
+    endDate: "",
     students: "",
-    theoryCreditHours: "",
-    labCreditHours: "",
-    Curriculum: "",
-    gpaPolicy: "",
-    freshmanAndSophomoreYearSemesters: "",
-    juniorandseniorYearSemesters: "",
-    freshmanAndSophomoreYearWeight: "",
-    juniorandseniorYearWeight: "",
-    indirectAssessmentPercentage: ""
+    sections: "",
   });
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [programs, setPrograms] = useState([]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    // Fetch programs on mount
+    const fetchPrograms = async () => {
+      try {
+        const response = await batchService.getPrograms();
+        setPrograms(response.data.data || []);
+      } catch (error) {
+        console.error("Failed to fetch programs:", error);
+      }
+    };
 
-  const validateForm = () => {
-    const requiredFields = [
-      "program",
-      "academicYear",
-      "sections",
-      "programBatch",
-      "noOfSessions",
-      "ploPassingThreshhold",
-      "status",
-      "useInObe",
-      "marks",
-      "students",
-      "theoryCreditHours",
-      "labCreditHours",
-      "Curriculum",
-      "gpaPolicy",
-      "freshmanAndSophomoreYearSemesters",
-      "juniorandseniorYearSemesters",
-      "freshmanAndSophomoreYearWeight",
-      "juniorandseniorYearWeight",
-      "indirectAssessmentPercentage",
-    ];
-    return requiredFields.every((field) => formData[field]);
-  };
+    fetchPrograms();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-
-    if (validateForm()) {
-      alert("Form submitted successfully!");
-      // Reset form state
+  useEffect(() => {
+    if (batchToEdit) {
       setFormData({
-        program: "",
-        academicYear: "",
-        sections: "",
-        programBatch: "",
-        noOfSessions: "",
-        ploPassingThreshhold: "",
-        status: "",
-        useInObe: "",
-        marks: "",
-        students: "",
-        theoryCreditHours: "",
-        labCreditHours: "",
-        Curriculum: "",
-        gpaPolicy: "",
-        freshmanAndSophomoreYearSemesters: "",
-        juniorandseniorYearSemesters: "",
-        freshmanAndSophomoreYearWeight: "",
-        juniorandseniorYearWeight: "",
-        indirectAssessmentPercentage: "",
+        programBatch: batchToEdit.batchName || "",
+        programId: batchToEdit.programId || "", // <-- Fixed here
+        startDate: batchToEdit.startDate || "",
+        endDate: batchToEdit.endDate || "",
+        students: batchToEdit.students || "",
+        sections: batchToEdit.sections || "",
       });
-      setIsSubmitted(false);
-    } else {
-      alert("Please fill in all required fields.");
+    }
+  }, [batchToEdit]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      batchName: formData.programBatch,
+      programId: formData.programId, // <-- Used here
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      students: formData.students,
+      sections: formData.sections,
+    };
+
+    try {
+      if (batchToEdit) {
+        await batchService.updateBatch(batchToEdit.programBatchId, payload);
+      } else {
+        await batchService.createBatch(payload);
+      }
+
+      onBack();
+    } catch (err) {
+      console.error("Error submitting batch:", err);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-lg shadow-lg border border-gray-200">
-      {/* Form Section */}
-      <div className="bg-white border border-gray-300 rounded-md p-6 shadow-md">
-        <form onSubmit={handleSubmit}>
-          {/* First Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Program
-              </label>
-              <select
-                name="program"
-                value={formData.program}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.program ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="Math">Mathematics</option>
-                <option value="Science">Science</option>
-              </select>
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Academic Year
-              </label>
-              <select
-                name="academicYear"
-                value={formData.academicYear}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.academicYear ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm text-gray-600 mb-2">
-                Sections
-              </label>
-              <input
-                type="text"
-                name="sections"
-                placeholder="A, B, C"
-                value={formData.sections}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.sections ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
+    <div className="w-full max-w-2xl bg-white p-6 rounded shadow-lg">
+      <h2 className="text-2xl font-semibold mb-4">
+        {batchToEdit ? "Edit Program Batch" : "Create Program Batch"}
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1 font-medium">Program Batch Name</label>
+          <input
+            type="text"
+            name="programBatch"
+            value={formData.programBatch}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Program</label>
+          <select
+            name="programId" // <-- Fixed name
+            value={formData.programId} // <-- Bound to programId
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          >
+            <option value="">Select a program</option>
+            {programs.map((program) => (
+              <option key={program.programId} value={program.programId}>
+                {program.programName}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1 font-medium">Start Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
           </div>
-
-          {/* Second Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Program Batch
-              </label>
-              <input
-                name="programBatch"
-                type="text"
-                value={formData.programBatch}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.programBatch ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                No. of Sessions
-              </label>
-              <input
-                type="number"
-                name="noOfSessions"
-                placeholder="8"
-                value={formData.noOfSessions}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.noOfSessions ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm text-gray-600 mb-2">
-                PLO Passing Threshhold
-              </label>
-              <input
-                type="number"
-                name="ploPassingThreshhold"
-                placeholder="50"
-                value={formData.ploPassingThreshhold}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.ploPassingThreshhold ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
+          <div>
+            <label className="block mb-1 font-medium">End Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
           </div>
-
-          {/* Third Row */}
-          {/* Row for Status, Use in OBE, Marks, Students, Theory Credit Hours, Lab Credit Hours */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            {/* Status */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Status</label>
-              <input
-                name="status"
-                type="text"
-                placeholder="Active"
-                value={formData.status}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.status ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-
-            {/* Use in OBE */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Use in OBE</label>
-              <input
-                name="useInObe"
-                placeholder="Yes"
-                value={formData.useInObe}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.useInObe ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-              </input>
-            </div>
-
-            {/* Marks */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Marks %</label>
-              <input
-                type="number"
-                name="marks"
-                placeholder="70"
-                value={formData.marks}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.marks ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-
-            {/* Students */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Students %</label>
-              <input
-                type="number"
-                name="students"
-                placeholder="80"
-                value={formData.students}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.students ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-
-            {/* Theory Credit Hours */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Theory Credit Hours</label>
-              <input
-                type="number"
-                name="theoryCreditHours"
-                value={formData.theoryCreditHours}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.theoryCreditHours
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-
-            {/* Lab Credit Hours */}
-            <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">Lab Credit Hours</label>
-              <input
-                type="number"
-                name="labCreditHours"
-                value={formData.labCreditHours}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.labCreditHours
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-
-          {/* Fourth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Curriculum
-              </label>
-              <select
-                name="Curriculum"
-                value={formData.Curriculum}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.Curriculum ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="Math">Mathematics</option>
-                <option value="Science">Science</option>
-              </select>
-            </div>
-            <div className="w-full md:w-2/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                GPA Policy
-              </label>
-              <select
-                name="gpaPolicy"
-                value={formData.gpaPolicy}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.gpaPolicy ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              >
-                <option value="">- Select -</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Fifth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Freshman and Sophomore Year Semesters
-              </label>
-              <input
-                name="freshmanAndSophomoreYearSemesters"
-                type="number"
-                placeholder="1,2,3,4"
-                value={formData.freshmanAndSophomoreYearSemesters}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.freshmanAndSophomoreYearSemesters ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Junior and Senior Year Semesters
-              </label>
-              <input
-                type="number"
-                name="juniorandseniorYearSemesters"
-                placeholder="5,6,7,8"
-                value={formData.juniorandseniorYearSemesters}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.juniorandseniorYearSemesters ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm text-gray-600 mb-2">
-                Freshman and Sophomore Year Weight
-              </label>
-              <input
-                type="number"
-                name="freshmanAndSophomoreYearWeight"
-                placeholder="40"
-                value={formData.freshmanAndSophomoreYearWeight}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.freshmanAndSophomoreYearWeight ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2">
-              <label className="block text-sm text-gray-600 mb-2">
-                Junior and Senior Year Weight
-              </label>
-              <input
-                type="number"
-                name="juniorandseniorYearWeight"
-                placeholder="60"
-                value={formData.juniorandseniorYearWeight}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.juniorandseniorYearWeight ? "border-red-500" : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Sixth Row */}
-          <div className="flex flex-wrap -mx-2 mb-4">
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0">
-              <label className="block text-sm text-gray-600 mb-2">
-                Indirect Assessment Percentage
-              </label>
-              <input
-                type="number"
-                name="indirectAssessmentPercentage"
-                placeholder="0"
-                value={formData.indirectAssessmentPercentage}
-                onChange={handleInputChange}
-                className={`w-full border ${
-                  isSubmitted && !formData.indirectAssessmentPercentage
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md p-2 text-sm`}
-                required
-              />
-            </div>
-            <div className="w-full md:w-1/4 px-2 mb-4 md:mb-0 flex items-center">
-              <input
-                type="checkbox"
-                id="indirectAssessmentCheckbox"
-                name="indirectAssessmentCheckbox"
-                checked={formData.indirectAssessmentCheckbox}
-                onChange={handleInputChange}
-                className="mr-2"
-              />
-              <label className="text-sm text-gray-600" htmlFor="indirectAssessmentCheckbox">
-                Include Indirect Assessment on Student Portal
-              </label>
-            </div>
-          </div>
-
-
-          {/* Buttons */}
-          <div className="flex gap-4">
-            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-              Submit
-            </button>
-            <button type="button" onClick={onBack} className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className="flex justify-between mt-6">
+          <button
+            type="button"
+            onClick={onBack}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            {batchToEdit ? "Update" : "Save"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default ProgramForm;
+export default ProgramBatchForm;

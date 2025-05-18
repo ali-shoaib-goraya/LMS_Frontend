@@ -1,155 +1,120 @@
-import React, { useState } from "react";
-import { mockBatches } from "../../../MockData/mockBatches"; // Assuming you have mock data for program batches
-import ProgramBatchForm from "../Forms/ProgramBatchForm"; // Form for adding/editing a program batch
+
+import React, { useEffect, useState } from "react";
+import batchService from "../../../services/batchService";
+import ProgramBatchForm from "../Forms/ProgramBatchForm";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
 
 const ProgramBatchTable = () => {
-  const [programBatches] = useState(mockBatches);
-  const [selectedBatches, setSelectedBatches] = useState([]);
-  const [showForm, setShowForm] = useState(false); // State to toggle form view
+  const [batches, setBatches] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [filters, setFilters] = useState({ program: "" });
+  const [pagination, setPagination] = useState({ pageNumber: 1, pageSize: 10, totalCount: 0 });
 
-  const [filters, setFilters] = useState({
-    batchName: "",
-    program: "",
-    startDate: "",
-    endDate: "",
-  });
-
-  const itemsPerPage = 20;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handleCheckboxChange = (id) => {
-    setSelectedBatches((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((batchId) => batchId !== id)
-        : [...prevSelected, id]
-    );
+  const fetchBatches = async () => {
+    try {
+      const { data } = await batchService.getAllBatches({
+        pageNumber: pagination.pageNumber,
+        pageSize: pagination.pageSize,
+        program: filters.program,
+      });
+      setBatches(data.data.items);
+      setPagination((prev) => ({ ...prev, totalCount: data.data.totalCount }));
+    } catch (error) {
+      console.error("Failed to fetch batches", error);
+    }
   };
 
-  const handleFilterChange = (e, key) => {
-    setFilters({ ...filters, [key]: e.target.value });
+  useEffect(() => {
+    fetchBatches();
+  }, [pagination.pageNumber, filters.program]);
+
+  const handleDelete = async (programBatchId) => {
+    if (!window.confirm("Are you sure you want to delete this batch?")) return;
+    try {
+      await batchService.deleteBatch(programBatchId);
+      fetchBatches();
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
   };
 
-  const filteredProgramBatches = programBatches.filter((batch) =>
-    Object.keys(filters).every((key) =>
-      filters[key] ? batch[key]?.toString().toLowerCase().includes(filters[key].toLowerCase()) : true
-    )
-  );
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, program: e.target.value });
+    setPagination({ ...pagination, pageNumber: 1 });
+  };
 
-  const totalItems = filteredProgramBatches.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentProgramBatches = filteredProgramBatches.slice(startIndex, endIndex);
-
+  const totalPages = Math.ceil(pagination.totalCount / pagination.pageSize);
+  console.log("batches", batches);
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
-      {/* Program Batch Section Header */}
       <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Program Batches</h2>
       </div>
 
-      {/* Conditional Rendering: Show form or table */}
       {showForm ? (
-        <ProgramBatchForm onBack={() => setShowForm(false)} /> // Show form when button is clicked
+        <ProgramBatchForm
+          onBack={() => {
+            setShowForm(false);
+            setSelectedBatch(null);
+            fetchBatches();
+          }}
+          batchToEdit={selectedBatch}
+        />
       ) : (
         <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg overflow-x-auto">
-          {/* Table Info */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
-              Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
+              Showing {pagination.pageNumber} of {totalPages} pages
             </h2>
             <button
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              onClick={() => setShowForm(true)} // Show form on button click
+              onClick={() => setShowForm(true)}
             >
               Create
             </button>
           </div>
 
-          {/* Table */}
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-white">
               <tr className="text-left border-b border-gray-300">
-                <th className="border border-gray-300 px-4 py-3">#</th>
-                <th className="border border-gray-300 px-4 py-3">
-                  <div className="flex flex-col items-center">
-                    <span>Select</span>
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedBatches(programBatches.map(batch => batch.id));
-                        } else {
-                          setSelectedBatches([]);
-                        }
-                      }}
-                      className="w-4 h-4 mt-1 cursor-pointer"
-                    />
-                  </div>
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
+                <th className="border px-4 py-3">#</th>
+                <th className="border px-4 py-3">Program Batch</th>
+                <th className="border px-4 py-3">
                   <div className="flex flex-col items-center">
                     <span>Program</span>
                     <input
                       type="text"
                       value={filters.program}
-                      onChange={(e) => handleFilterChange(e, "program")}
+                      onChange={handleFilterChange}
                       className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
                     />
                   </div>
                 </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  <div className="flex flex-col items-center">
-                    <span>Academic Year</span>
-                    <input
-                      type="number"
-                      value={filters.academicYear}
-                      onChange={(e) => handleFilterChange(e, "academicYear")}
-                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
-                    />
-                  </div>
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  <div className="flex flex-col items-center">
-                    <span>Program Batch</span>
-                    <input
-                      type="text"
-                      value={filters.programBatch}
-                      onChange={(e) => handleFilterChange(e, "programBatch")}
-                      className="w-40 mt-1 p-2 border rounded text-sm bg-gray-50"
-                    />
-                  </div>
-                </th>
-                <th className="border border-gray-300 px-4 py-3">
-                  Students
-                </th>
-                <th className="border border-gray-300 px-4 py-3 text-center">Actions</th>
+                <th className="border px-4 py-3">Start Date</th>
+                <th className="border px-4 py-3">End Date</th>
+                <th className="border px-4 py-3">Students</th>
+                <th className="border px-4 py-3">Sections</th>
+                <th className="border px-4 py-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {currentProgramBatches.length > 0 ? (
-                currentProgramBatches.map((batch, index) => (
-                  <tr key={batch.id} className="text-center hover:bg-gray-100 transition">
-                    <td className="border border-gray-300 px-4 py-3">{startIndex + index + 1}</td>
-                    <td className="border border-gray-300 px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedBatches.includes(batch.id)}
-                        onChange={() => handleCheckboxChange(batch.id)}
-                        className="cursor-pointer w-4 h-4"
-                      />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-3">{batch.program}</td>
-                    <td className="border border-gray-300 px-4 py-3">{batch.academicYear}</td>
-                    <td className="border border-gray-300 px-4 py-3">{batch.programBatch}</td>
-                    <td className="border border-gray-300 px-4 py-3">{batch.students}</td>
-                    <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2">
-                      <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
+              {batches.length > 0 ? (
+                batches.map((batch, index) => (
+                  <tr key={batch.programBatchId} className="text-center hover:bg-gray-100">
+                    <td className="border px-4 py-3">{index + 1}</td>
+                    <td className="border px-4 py-3">{batch.batchName}</td>
+                    <td className="border px-4 py-3">{batch.programName}</td>
+                    <td className="border px-4 py-3">{batch.startDate}</td>
+                    <td className="border px-4 py-3">{batch.endDate}</td>
+                    <td className="border px-4 py-3">{batch.students}</td>
+                    <td className="border px-4 py-3">{batch.sections}</td>
+                    <td className="border px-4 py-3 flex justify-center gap-2">
+                      <button onClick={() => { setSelectedBatch(batch); setShowForm(true); }}>
                         <img src={editIcon} alt="Edit" className="w-5 h-5" />
                       </button>
-                      <button className="hover:opacity-80">
+                      <button onClick={() => handleDelete(batch.programBatchId)}>
                         <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
                       </button>
                     </td>
@@ -157,7 +122,7 @@ const ProgramBatchTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center text-gray-600 py-4">
+                  <td colSpan="8" className="text-center text-gray-600 py-4">
                     No program batches found.
                   </td>
                 </tr>
@@ -167,17 +132,25 @@ const ProgramBatchTable = () => {
 
           {/* Pagination */}
           <div className="flex justify-start mt-4">
-            <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-3 py-2 border rounded bg-gray-200 mr-2">
-              «
-            </button>
+            <button
+              onClick={() => setPagination((p) => ({ ...p, pageNumber: Math.max(1, p.pageNumber - 1) }))}
+              disabled={pagination.pageNumber === 1}
+              className="px-3 py-2 border rounded bg-gray-200 mr-2"
+            >«</button>
             {Array.from({ length: totalPages }, (_, i) => (
-              <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-2 border rounded mx-1 ${currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}>
+              <button
+                key={i + 1}
+                onClick={() => setPagination((p) => ({ ...p, pageNumber: i + 1 }))}
+                className={`px-3 py-2 border rounded mx-1 ${pagination.pageNumber === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+              >
                 {i + 1}
               </button>
             ))}
-            <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-2 border rounded bg-gray-200 ml-2">
-              »
-            </button>
+            <button
+              onClick={() => setPagination((p) => ({ ...p, pageNumber: Math.min(totalPages, p.pageNumber + 1) }))}
+              disabled={pagination.pageNumber === totalPages}
+              className="px-3 py-2 border rounded bg-gray-200 ml-2"
+            >»</button>
           </div>
         </div>
       )}
