@@ -15,6 +15,7 @@ const departmentService = {
     updateDepartment: (departmentId, data) => api.put(`/departments/${departmentId}`, data),
     deleteDepartment: (departmentId) => api.delete(`/departments/${departmentId}`),
     getDepartmentById: (departmentId) => api.get(`/departments/${departmentId}`),
+    getDepartments: () => api.get('/departments'),
     getAllSchools: () => api.get('/schools/all'),
 }
 
