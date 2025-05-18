@@ -12,24 +12,25 @@ import Cog6ToothIcon from '@/assets/cog6tooth.png';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Roles & Permissions', href: '/dashboard/roles-permissions', icon: KeyIcon },
-  { name: 'Users Management', href: '/dashboard/user-management',icon: UserGroupIcon,  },
+  { name: 'Users Management',icon: UserGroupIcon, panel: [
+    { name: 'Manage Faculty ', href: '/dashboard/users/faculty' },
+    { name: 'Manage Students', href: '/dashboard/users/students' },
+  ],
+   },
   { name: 'Academic Structure', icon: AcademicCapIcon, 
     panel: [
       { name: 'Manage Campus', href: '/dashboard/academic/campus' },
       { name: 'Manage School', href: '/dashboard/academic/school' },
       { name: 'Manage Program', href: '/dashboard/academic/program' },
       { name: 'Manage Program Batch ', href: '/dashboard/academic/program-batch' },
+      { name: 'Manage Batch Sections ', href: '/dashboard/academic/batchsections' },
       { name: 'Manage Department', href: '/dashboard/academic/department' },
       { name: 'Manage Semester', href: '/dashboard/academic/semester' },
       { name: 'Manage Course Sections', href: '/dashboard/academic/course-section' },
-      { name: 'Manage Faculty ', href: '/dashboard/academic/faculty' },
-      { name: 'Manage Students', href: '/dashboard/academic/students' },
       { name: 'Manage Courses', href: '/dashboard/academic/courses' },
     ],
   },
   { name: 'TimeTable Generation', href: '/dashboard/timetable', icon: ClipboardDocumentListIcon },
-  { name: 'Grades', href: '/dashboard/grades', icon: DocumentCheckIcon },
-  { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
 ];
 

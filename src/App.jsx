@@ -39,6 +39,7 @@ import TeacherCourseDetails from './pages/faculty/TeacherCourseDetails';
 import UserManagement from './pages/adminPages/UserManagement';
 import GenerateTimeTable from './pages/adminPages/timetable';
 import ProtectedRoute from './auth/ProtectedRoute';
+import BatchSections from './pages/admin/tables/BatchSections';
 
 const App = () => {
   return (
@@ -69,27 +70,28 @@ const App = () => {
           </Route>
 
           {/* Admin Routes */}
-          <Route path="/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<AdminDashboard />}>
             <Route index element={<DashboardHome />} />
             <Route path="coursedetail" element={<AdminCourseDetails />} />
             <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
             <Route path="courses" element={<Courses />} />
             <Route path="users" element={<Users />} />
+            <Route path="timetable" element={<GenerateTimeTable />} />
             <Route path="academic" element={<Acadmia />} />
-            <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="grades" element={<Grades />} />
             <Route path="user-management" element={<UserManagement />} />
-            <Route path="academic/students" element={<StudentsTable />} />
-            <Route path="academic/faculty" element={<FacultyTable />} />
+            <Route path="users/students" element={<StudentsTable />} />
+            <Route path="users/faculty" element={<FacultyTable />} />
             <Route path="academic/course-section" element={<CourseSections />} />
             <Route path="academic/program" element={<ProgramTable />} />
             <Route path="academic/department" element={<DepartmentTable />} />
             <Route path="academic/program-batch" element={<ProgramBatchesTable />} />
+            <Route path="academic/batchsections" element={<BatchSections />} />
             <Route path="academic/campus" element={<CampusTable />} />
             <Route path="academic/semester" element={<SemesterTable />} />
             <Route path="academic/school" element={<SchoolTable />} />
             <Route path="academic/courses" element={<CoursesTable />} />
+
           </Route>
         </Routes>
       </Router>
