@@ -27,7 +27,7 @@ const navigation = [
       { name: 'Manage Courses', href: '/dashboard/academic/courses' },
     ],
   },
-  { name: 'Course Management', href: '/dashboard/courses', icon: ClipboardDocumentListIcon },
+  { name: 'TimeTable Generation', href: '/dashboard/timetable', icon: ClipboardDocumentListIcon },
   { name: 'Grades', href: '/dashboard/grades', icon: DocumentCheckIcon },
   { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },

@@ -12,7 +12,7 @@ import TimeTable from './pages/student/TimeTablePage';
 import AttendancePage from './pages/student/AttendancePage';
 import OBEPage from './pages/student/OBEPage';
 import MiscPage from './pages/student/MiscPage';
-import Courses from './pages/adminPages/Courses'; 
+import Courses from './pages/adminPages/timetable'; 
 import Users from './pages/adminPages/Users';
 import Acadmia from './pages/adminPages/Acadmia'; 
 import Reports from './pages/adminPages/Reports';
@@ -39,6 +39,7 @@ import TeachersSettings from './pages/faculty/TeachersSettings';
 import TeacherDashboard from './pages/faculty/TeacherDashboard';
 import TeacherCourseDetails from './pages/faculty/TeacherCourseDetails';
 import UserManagement from './pages/adminPages/UserManagement';
+import GenerateTimeTable from './pages/adminPages/timetable';
 
 const App = () => {
   return (
@@ -72,7 +73,7 @@ const App = () => {
           <Route index element={<DashboardHome />} />
           <Route path="/dashboard/coursedetail" element={<AdminCourseDetails />} />
           <Route path="roles-permissions/*" element={<RolesAndPermissions />} />
-          <Route path="courses" element={<Courses />} />
+          <Route path="timetable" element={<GenerateTimeTable />} />
           <Route path="users" element={<Users />} />
           <Route path="academic" element={<Acadmia />} />
           <Route path="reports" element={<Reports />} />
