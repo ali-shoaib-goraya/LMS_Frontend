@@ -159,7 +159,7 @@ export const courses = [
 
   // Computer Science Courses (id 33 to 48)
   { id: 47, name: "Calculus and Analytical Geometry - QR1", teacherId: 21, departmentId: 3, SemestersId: 9 },
-  { id: 48, name: "Foundation Math 2 (for Pre-Medical students) ", teacherId: 22, departmentId: 3, SemestersId: 9 },
+  { id: 48, name: "Foundation Math 2", teacherId: 22, departmentId: 3, SemestersId: 9 },
   { id: 49, name: "Object Oriented Programming ", teacherId: 23, departmentId: 3, SemestersId: 9 },
   { id: 50, name: "Digital Logic Design ", teacherId: 24, departmentId: 3, SemestersId: 9 },
   { id: 51, name: "Expository Writing ", teacherId: 25, departmentId: 3, SemestersId: 9 },
@@ -228,6 +228,7 @@ export const rooms = [
   { id: 10, name: "Room LH3" },
   { id: 11, name: "Room HL" },
   { id: 12, name: "Room SYS-L" },
+  { id: 13, name: "Room FYP-L" },
 ];
 
 // Base timeslots for each day
