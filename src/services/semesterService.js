@@ -10,10 +10,10 @@ const semesterService = {
             status,
           },
         }),
-    createSemester: (data) => api.post('/semesteres', data),
-    updateSemester: (semesterId, data) => api.put(`/semesteres/${semesterId}`, data),
-    deleteSemester: (semesterId) => api.delete(`/semesteres/${semesterId}`),
-    getSemesterById: (semesterId) => api.get(`/semesteres/${semesterId}`),
+    createSemester: (data) => api.post('/semesters', data),
+    updateSemester: (semesterId, data) => api.patch(`/semesters/${semesterId}`, data),
+    deleteSemester: (semesterId) => api.delete(`/semesters/${semesterId}`),
+    getSemesterById: (semesterId) => api.get(`/semesters/${semesterId}`),
 }
 
 export default semesterService; 
