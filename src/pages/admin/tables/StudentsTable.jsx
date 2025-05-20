@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-import { mockStudents } from "../../../MockData/mockStudents";
+import React, { useState, useEffect } from "react";
+import studentService from "../../../services/studentService";
 import editIcon from "../../../assets/pencil.png";
 import deleteIcon from "../../../assets/trash.png";
 import StudentForm from "../Forms/StudentForm";
+import BulkStudentsForm from "../Forms/BulkStudentsForm";
 
 const StudentsTable = () => {
-  const [students] = useState(mockStudents);
-  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showBulkForm, setShowBulkForm] = useState(false);
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [filters, setFilters] = useState({
-    registrationNo: "",
+    enrollmentNo: "",
     name: "",
     programBatch: "",
     section: "",
@@ -18,40 +22,95 @@ const StudentsTable = () => {
 
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const handleCheckboxChange = (id) => {
-    setSelectedStudents((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((studentId) => studentId !== id)
-        : [...prevSelected, id]
-    );
-  };
+  // Fetch students from backend
+  const fetchStudents = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await studentService.getAllStudents({
+        pageNumber: currentPage,
+        pageSize: itemsPerPage,
+        name: filters.name,
+        enrollmentNo: filters.enrollmentNo,
+        programBatch: filters.programBatch,
+        section: filters.section,
+      });
 
-  const handleSelectAllChange = () => {
-    if (selectedStudents.length === currentStudents.length) {
-      setSelectedStudents([]);
-    } else {
-      setSelectedStudents(currentStudents.map((s) => s.id));
+      if (response.data && response.data.data) {
+        setStudents(response.data.data.items || []);
+        setTotalCount(response.data.data.totalCount || 0);
+        setTotalPages(Math.ceil((response.data.data.totalCount || 0) / itemsPerPage));
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      setError("Failed to fetch students. Please try again.");
+      setStudents([]);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Load students on component mount and when filters/page change
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      fetchStudents();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(debounceTimer);
+  }, [currentPage, filters]);
+
   const handleFilterChange = (e, key) => {
     setFilters({ ...filters, [key]: e.target.value });
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
-  const filteredStudents = students.filter((student) =>
-    Object.keys(filters).every((key) =>
-      filters[key]
-        ? student[key]?.toString().toLowerCase().includes(filters[key].toLowerCase())
-        : true
-    )
-  );
+  const handleAddStudent = () => {
+    setEditingStudent(null);
+    setShowForm(true);
+    setShowBulkForm(false);
+  };
 
-  const totalItems = filteredStudents.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const handleAddStudentInBulk = () => {
+    setShowBulkForm(true);
+    setShowForm(false);
+  };
+
+  const handleEditStudent = (student) => {
+    setEditingStudent(student);
+    setShowForm(true);
+    setShowBulkForm(false);
+  };
+
+  const handleDeleteStudent = async (studentId) => {
+    if (window.confirm("Are you sure you want to delete this student?")) {
+      try {
+        await studentService.deleteStudent(studentId);
+        fetchStudents(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting student:", error);
+        alert("Failed to delete student. Please try again.");
+      }
+    }
+  };
+
+  const handleFormSuccess = () => {
+    setShowForm(false);
+    setShowBulkForm(false);
+    setEditingStudent(null);
+    fetchStudents(); // Refresh the list
+  };
+
+  const handleFormCancel = () => {
+    setShowForm(false);
+    setShowBulkForm(false);
+    setEditingStudent(null);
+  };
+
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentStudents = filteredStudents.slice(startIndex, endIndex);
+  const endIndex = Math.min(startIndex + students.length, totalCount);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col">
@@ -60,48 +119,64 @@ const StudentsTable = () => {
       </div>
 
       {showForm ? (
-        <StudentForm onBack={() => setShowForm(false)} />
+        <StudentForm
+          onBack={handleFormCancel}
+          onSuccess={handleFormSuccess}
+          student={editingStudent}
+        />
+      ) : showBulkForm ? (
+        <BulkStudentsForm
+          onBack={handleFormCancel}
+          onSuccess={handleFormSuccess}
+        />
       ) : (
         <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg">
           {/* Top Bar */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
-              Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>Showing {startIndex + 1}-{endIndex} of {totalCount} items</>
+              )}
             </h2>
-            <button
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              onClick={() => setShowForm(true)}
-            >
-              Add Students
-            </button>
+            <div className="flex gap-3">
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                onClick={handleAddStudent}
+              >
+                Add Student
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleAddStudentInBulk}
+              >
+                Add Students in Bulk
+              </button>
+            </div>
           </div>
 
+          {error && (
+            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
+
           {/* Scrollable Table */}
-          <div>
+          <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 text-sm">
               <thead className="bg-white">
                 <tr className="text-left border-b border-gray-300">
                   <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">#</th>
-                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap text-cneter">
-                    Select
-                    <div className="mt-1 items-center flex justify-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedStudents.length === currentStudents.length && currentStudents.length > 0}
-                        onChange={handleSelectAllChange}
-                        className="cursor-pointer w-4 h-4"
-                      />
-                    </div>
-                  </th>
-
                   <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
                     <div className="flex flex-col text-center">
                       <span>Registration No.</span>
                       <input
                         type="text"
-                        value={filters.registrationNo}
-                        onChange={(e) => handleFilterChange(e, "registrationNo")}
+                        value={filters.enrollmentNo}
+                        onChange={(e) => handleFilterChange(e, "enrollmentNo")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -113,6 +188,7 @@ const StudentsTable = () => {
                         value={filters.name}
                         onChange={(e) => handleFilterChange(e, "name")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -124,6 +200,7 @@ const StudentsTable = () => {
                         value={filters.programBatch}
                         onChange={(e) => handleFilterChange(e, "programBatch")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -135,35 +212,34 @@ const StudentsTable = () => {
                         value={filters.section}
                         onChange={(e) => handleFilterChange(e, "section")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
-                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Status</th>
-                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Grade</th>
-                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">GPA</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Name</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Contact</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Email</th>
                   <th className="border border-gray-300 px-4 py-3 text-center whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {currentStudents.length > 0 ? (
-                  currentStudents.map((student, index) => (
+                {loading ? (
+                  <tr>
+                    <td colSpan="9" className="text-center text-gray-600 py-8">
+                      Loading students...
+                    </td>
+                  </tr>
+                ) : students.length > 0 ? (
+                  students.map((student, index) => (
                     <tr key={student.id} className="text-center hover:bg-gray-100 transition">
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
                         {startIndex + index + 1}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        <input
-                          type="checkbox"
-                          checked={selectedStudents.includes(student.id)}
-                          onChange={() => handleCheckboxChange(student.id)}
-                          className="cursor-pointer w-4 h-4"
-                        />
+                        {student.enrollmentNo}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        {student.registrationNo}
-                      </td>
-                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        {student.name}
+                        {student.firstName} {student.lastName}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
                         {student.programBatch}
@@ -172,27 +248,37 @@ const StudentsTable = () => {
                         {student.section}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        {student.status}
+                        {student.guardianName || "-"}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        {student.grade}
+                        {student.guardianContact || "-"}
                       </td>
                       <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                        {student.gpa}
+                        {student.email}
                       </td>
-                      <td className="border border-gray-300 px-4 py-3 flex justify-center gap-2 whitespace-nowrap">
-                        <button className="hover:opacity-80" onClick={() => setShowForm(true)}>
-                          <img src={editIcon} alt="Edit" className="w-5 h-5" />
-                        </button>
-                        <button className="hover:opacity-80">
-                          <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
-                        </button>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            className="hover:opacity-80"
+                            onClick={() => handleEditStudent(student)}
+                            title="Edit Student"
+                          >
+                            <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                          </button>
+                          <button
+                            className="hover:opacity-80"
+                            onClick={() => handleDeleteStudent(student.id)}
+                            title="Delete Student"
+                          >
+                            <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="10" className="text-center text-gray-600 py-4">
+                    <td colSpan="9" className="text-center text-gray-600 py-8">
                       No students found.
                     </td>
                   </tr>
@@ -201,30 +287,45 @@ const StudentsTable = () => {
             </table>
           </div>
 
-          {/* Pagination */}
+          {/* Pagination - Always show but disable when only one page */}
           <div className="flex justify-start mt-4">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-3 py-2 border rounded bg-gray-200 mr-2"
+              className="px-3 py-2 border rounded bg-gray-200 mr-2 disabled:opacity-50"
             >
               «
             </button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-2 border rounded mx-1 ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => {
+              const pageNum = i + 1;
+              const showPage = 
+                pageNum === 1 || 
+                pageNum === totalPages || 
+                (pageNum >= currentPage - 2 && pageNum <= currentPage + 2);
+              
+              if (!showPage) {
+                if (pageNum === currentPage - 3 || pageNum === currentPage + 3) {
+                  return <span key={pageNum} className="px-3 py-2">...</span>;
+                }
+                return null;
+              }
+              
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-3 py-2 border rounded mx-1 ${
+                    currentPage === pageNum ? "bg-blue-500 text-white" : "bg-gray-200"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-3 py-2 border rounded bg-gray-200 ml-2"
+              className="px-3 py-2 border rounded bg-gray-200 ml-2 disabled:opacity-50"
             >
               »
             </button>

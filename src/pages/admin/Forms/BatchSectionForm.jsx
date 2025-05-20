@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import sectionService from "../../../services/sectionService"; // Adjust the import path as needed
 
-// Updated validation schema
 const schema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  shortName: yup.string().max(10, "Short Name should be at most 10 characters"),
+  sectionName: yup.string().required("Section name is required"),
+  programBatchId: yup.string().required("Program Batch is required"),
   capacity: yup
     .number()
     .typeError("Capacity must be a number")
@@ -16,6 +16,9 @@ const schema = yup.object().shape({
 });
 
 const BatchSectionForm = ({ onBack, initialData, onSubmitData }) => {
+  const [programBatches, setProgramBatches] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -24,24 +27,62 @@ const BatchSectionForm = ({ onBack, initialData, onSubmitData }) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: "",
-      shortName: "",
+      sectionName: "",
+      programBatchId: "",
       capacity: "",
     },
   });
 
+  // Fetch program batches when component mounts
   useEffect(() => {
-    if (initialData) {
+    const fetchProgramBatches = async () => {
+      try {
+        setIsLoading(true);
+        const response = await sectionService.getAllProgramBatches();
+        setProgramBatches(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching program batches:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProgramBatches();
+  }, []);
+
+  // Reset form values only when both initialData and programBatches are ready
+  useEffect(() => {
+    if (initialData && programBatches.length > 0) {
       reset({
-        name: initialData.name || "",
-        shortName: initialData.shortName || "",
+        sectionName: initialData.sectionName || "",
+        programBatchId: initialData.programBatchId || "",
         capacity: initialData.capacity || "",
       });
     }
-  }, [initialData, reset]);
+  }, [initialData, programBatches, reset]);
 
-  const onSubmit = (data) => {
-    onSubmitData(data);
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        sectionName: data.sectionName,
+        programBatchId: data.programBatchId,
+        capacity: parseInt(data.capacity),
+      };
+
+      if (initialData) {
+        await sectionService.updateSection(initialData.programBatchSectionId, payload);
+      } else {
+        await sectionService.createSection(payload);
+      }
+
+      onSubmitData(data);
+    } catch (error) {
+      console.error("Error saving section:", error);
+      alert("Failed to save section. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getInputStyle = (field) =>
@@ -57,30 +98,38 @@ const BatchSectionForm = ({ onBack, initialData, onSubmitData }) => {
         </h2>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          {/* Row with Name and Short Name */}
+          {/* Row with Name and Program Batch */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Name
+              <label htmlFor="sectionName" className="block text-sm font-medium text-gray-700">
+                Section Name
               </label>
               <input
-                id="name"
-                {...register("name")}
-                className={getInputStyle("name")}
+                id="sectionName"
+                {...register("sectionName")}
+                className={getInputStyle("sectionName")}
               />
-              <p className="text-red-600 text-sm">{errors.name?.message}</p>
+              <p className="text-red-600 text-sm">{errors.sectionName?.message}</p>
             </div>
 
             <div>
-              <label htmlFor="shortName" className="block text-sm font-medium text-gray-700">
-                Short Name
+              <label htmlFor="programBatchId" className="block text-sm font-medium text-gray-700">
+                Program Batch
               </label>
-              <input
-                id="shortName"
-                {...register("shortName")}
-                className={getInputStyle("shortName")}
-              />
-              <p className="text-red-600 text-sm">{errors.shortName?.message}</p>
+              <select
+                id="programBatchId"
+                {...register("programBatchId")}
+                className={getInputStyle("programBatchId")}
+                disabled={isLoading}
+              >
+                <option value="">Select Program Batch</option>
+                {programBatches.map((batch) => (
+                  <option key={batch.programBatchId} value={batch.programBatchId}>
+                    {batch.batchName}
+                  </option>
+                ))}
+              </select>
+              <p className="text-red-600 text-sm">{errors.programBatchId?.message}</p>
             </div>
           </div>
 
@@ -102,14 +151,16 @@ const BatchSectionForm = ({ onBack, initialData, onSubmitData }) => {
           <div className="flex gap-4">
             <button
               type="submit"
-              className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 transition"
+              disabled={isLoading}
+              className="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700 transition disabled:bg-green-400"
             >
-              {initialData ? "Update" : "Submit"}
+              {isLoading ? "Processing..." : initialData ? "Update" : "Submit"}
             </button>
             <button
               type="button"
               onClick={onBack}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              disabled={isLoading}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 disabled:bg-gray-200"
             >
               Cancel
             </button>

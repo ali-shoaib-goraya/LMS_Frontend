@@ -16,10 +16,7 @@ import MiscPage from './pages/student/MiscPage';
 import Courses from './pages/adminPages/timetable'; 
 import Users from './pages/adminPages/Users';
 import Acadmia from './pages/adminPages/Acadmia'; 
-import Reports from './pages/adminPages/Reports';
 import Settings from './pages/adminPages/Settings';
-import Grades from './pages/adminPages/Grades';
-import React from 'react';
 import StudentsTable from './pages/admin/tables/StudentsTable';
 import FacultyTable from './pages/admin/tables/FacultyTable';
 import CourseSections from './pages/admin/tables/CourseSections';
@@ -39,7 +36,7 @@ import TeacherCourseDetails from './pages/faculty/TeacherCourseDetails';
 import UserManagement from './pages/adminPages/UserManagement';
 import GenerateTimeTable from './pages/adminPages/timetable';
 import ProtectedRoute from './auth/ProtectedRoute';
-import BatchSections from './pages/admin/tables/BatchSections';
+import BatchSectionTable from './pages/admin/tables/BatchSectionTable';
 
 const App = () => {
   return (
@@ -86,7 +83,7 @@ const App = () => {
             <Route path="academic/program" element={<ProgramTable />} />
             <Route path="academic/department" element={<DepartmentTable />} />
             <Route path="academic/program-batch" element={<ProgramBatchesTable />} />
-            <Route path="academic/batchsections" element={<BatchSections />} />
+            <Route path="academic/batchsections" element={<BatchSectionTable />} />
             <Route path="academic/campus" element={<CampusTable />} />
             <Route path="academic/semester" element={<SemesterTable />} />
             <Route path="academic/school" element={<SchoolTable />} />
