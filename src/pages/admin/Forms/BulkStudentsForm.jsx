@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import studentService from '../../../services/studentService';
 
-export const BulkStudentsForm = ({ onBack, onSuccess }) => {
+const BulkStudentsForm = ({ onBack, onSuccess }) => {
   const [programBatches, setProgramBatches] = useState([]);
   const [filteredSections, setFilteredSections] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -124,35 +124,29 @@ export const BulkStudentsForm = ({ onBack, onSuccess }) => {
     setIsSubmitting(true);
     setErrors({});
 
-    try {
-      // Create FormData object to send file
-      const formDataToSubmit = new FormData();
-      formDataToSubmit.append('file', formData.file);
-      formDataToSubmit.append('programBatchSectionId', formData.programBatchSectionId);
-      
-      // Add your API call here
-      // For example:
-      // await studentService.uploadBulkStudents(formDataToSubmit);
-      
-      // Mock successful upload for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Students uploaded successfully');
-      onSuccess && onSuccess();
-    } catch (error) {
-      console.error('Error uploading students:', error);
-      
-      // Handle specific error cases
-      if (error.response && error.response.data && error.response.data.message) {
-        setErrors({ submit: error.response.data.message });
-      } else {
-        setErrors({ submit: 'Failed to upload students. Please try again.' });
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+   try {
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append('file', formData.file);
 
+    await studentService.createStudentsInBulk(
+      formData.programBatchSectionId,
+      formDataToSubmit
+    );
+
+    console.log('Students added successfully');
+    onSuccess && onSuccess();
+  } catch (error) {
+    console.error('Error uploading students:', error);
+    if (error.response && error.response.data && error.response.data.message) {
+      setErrors({ submit: error.response.data.message });
+    } else {
+      setErrors({ submit: 'Failed to upload students. Please try again.' });
+    }
+  } finally {
+    setIsSubmitting(false);
+  }
+  };
+  
   if (isLoading && programBatches.length === 0) {
     return (
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">

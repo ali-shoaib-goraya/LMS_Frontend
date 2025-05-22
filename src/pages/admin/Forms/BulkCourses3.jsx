@@ -101,7 +101,8 @@ const SelectTeachers = ({ school, semester, prefix, onBack, onSave, courses }) =
                   <th className="border px-4 py-2">Course Code</th>
                   <th className="border px-4 py-2">Course Name</th>
                   <th className="border px-4 py-2">Department</th>
-                  <th className="border px-4 py-2">Section No.</th>
+                  <th className="border px-4 py-2">Teacher</th>
+                  <th className="border px-4 py-2">Section</th>
                 </tr>
               </thead>
               <tbody>

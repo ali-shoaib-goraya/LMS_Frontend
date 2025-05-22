@@ -135,7 +135,7 @@ const CoursesTable = () => {
           onSubmitSuccess={handleFormSubmitSuccess}
         />
       ) : (
-        <div className="w-full max-w-7xl bg-white p-6 shadow-lg rounded-lg">
+        <div className="w-full max-w-5xl bg-white p-6 shadow-lg rounded-lg">
           {/* Table Info and Controls */}
           <div className="flex justify-between items-center mb-4 sticky top-0 bg-white z-10 pb-4">
             <h2 className="text-lg text-gray-800">
@@ -160,7 +160,7 @@ const CoursesTable = () => {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300 min-w-[1400px]">
               <thead className="bg-white-100">
-                <tr className="text-left border-b border-gray-300 text-center">
+                <tr className="border-b border-gray-300 text-center">
                   <th className="border border-gray-300 px-4 py-3 w-16">#</th>
                   <th className="border border-gray-300 px-4 py-3 text-center min-w-40">
                     Course Name

@@ -19,7 +19,7 @@ import Acadmia from './pages/adminPages/Acadmia';
 import Settings from './pages/adminPages/Settings';
 import StudentsTable from './pages/admin/tables/StudentsTable';
 import FacultyTable from './pages/admin/tables/FacultyTable';
-import CourseSections from './pages/admin/tables/CourseSections';
+import CourseSectionTable from './pages/admin/tables/CourseSectionTable';
 import ProgramTable from './pages/admin/tables/programsTable';
 import DepartmentTable from './pages/admin/tables/DepartmentsTable';
 import ProgramBatchesTable from './pages/admin/tables/ProgramBatchesTable';
@@ -79,7 +79,7 @@ const App = () => {
             <Route path="user-management" element={<UserManagement />} />
             <Route path="users/students" element={<StudentsTable />} />
             <Route path="users/faculty" element={<FacultyTable />} />
-            <Route path="academic/course-section" element={<CourseSections />} />
+            <Route path="academic/course-section" element={<CourseSectionTable />} />
             <Route path="academic/program" element={<ProgramTable />} />
             <Route path="academic/department" element={<DepartmentTable />} />
             <Route path="academic/program-batch" element={<ProgramBatchesTable />} />

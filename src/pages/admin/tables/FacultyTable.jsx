@@ -71,7 +71,7 @@ const FacultyTable = () => {
       {showForm ? (
         <FacultyForm onBack={() => setShowForm(false)} />
       ) : (
-        <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-7xl">
+        <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-5xl">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg text-gray-800">
               Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
