@@ -176,7 +176,6 @@ const StudentsTable = () => {
                         value={filters.enrollmentNo}
                         onChange={(e) => handleFilterChange(e, "enrollmentNo")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -188,7 +187,6 @@ const StudentsTable = () => {
                         value={filters.name}
                         onChange={(e) => handleFilterChange(e, "name")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -200,7 +198,6 @@ const StudentsTable = () => {
                         value={filters.programBatch}
                         onChange={(e) => handleFilterChange(e, "programBatch")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -212,7 +209,6 @@ const StudentsTable = () => {
                         value={filters.section}
                         onChange={(e) => handleFilterChange(e, "section")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                        placeholder="Filter..."
                       />
                     </div>
                   </th>
