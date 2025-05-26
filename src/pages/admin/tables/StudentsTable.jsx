@@ -113,8 +113,8 @@ const StudentsTable = () => {
   const endIndex = Math.min(startIndex + students.length, totalCount);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex flex-col">
-      <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
+    <div className="bg-gray-100 h-screen">
+      <div className="w-full max-w-6xl mx-auto bg-white p-4 shadow-md rounded-md mb-4 mt-6">
         <h2 className="text-xl font-semibold text-gray-800">Students</h2>
       </div>
 
@@ -130,9 +130,9 @@ const StudentsTable = () => {
           onSuccess={handleFormSuccess}
         />
       ) : (
-        <div className="w-full max-w-6xl bg-white p-6 shadow-lg rounded-lg">
+        <div className="w-full max-w-5xl mx-auto bg-white shadow-lg rounded-lg">
           {/* Top Bar */}
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center p-6">
             <h2 className="text-lg text-gray-800">
               {loading ? (
                 "Loading..."
@@ -157,7 +157,7 @@ const StudentsTable = () => {
           </div>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="px-6 mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
               {error}
             </div>
           )}
@@ -176,6 +176,7 @@ const StudentsTable = () => {
                         value={filters.enrollmentNo}
                         onChange={(e) => handleFilterChange(e, "enrollmentNo")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -187,6 +188,7 @@ const StudentsTable = () => {
                         value={filters.name}
                         onChange={(e) => handleFilterChange(e, "name")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -198,6 +200,7 @@ const StudentsTable = () => {
                         value={filters.programBatch}
                         onChange={(e) => handleFilterChange(e, "programBatch")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -209,6 +212,7 @@ const StudentsTable = () => {
                         value={filters.section}
                         onChange={(e) => handleFilterChange(e, "section")}
                         className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
                       />
                     </div>
                   </th>
@@ -284,7 +288,7 @@ const StudentsTable = () => {
           </div>
 
           {/* Pagination - Always show but disable when only one page */}
-          <div className="flex justify-start mt-4">
+          <div className="flex justify-start p-6 pt-4">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}

@@ -13,6 +13,7 @@ const studentService = {
           },
         }),
     createStudent: (data) => api.post('/students/enroll', data),
+    createStudentsInBulk: (batchSectionId, data) => api.post(`/students/bulk-enroll/${batchSectionId}`, data),
     updateStudent: (studentId, data) => api.patch(`/students/${studentId}`, data),
     deleteStudent: (studentId) => api.delete(`/students/${studentId}`),
     getStudentById: (studentId) => api.get(`/semesters/${studentId}`),

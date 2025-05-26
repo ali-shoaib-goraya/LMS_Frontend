@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { mockSchools } from "../../../MockData/mockSchools";
-import { mockSemesters } from "../../../MockData/mockSemesters";
+import courseSectionService from "../../../services/courseSectionService";
 import AddCourses from "../Forms/BulkCourses2";
 import SelectTeachers from "../Forms/BulkCourses3";
 
@@ -10,9 +9,42 @@ const SelectSemester = () => {
   const [school, setSchool] = useState("");
   const [semester, setSemester] = useState("");
   const [prefix, setPrefix] = useState("");
-  const [step, setStep] = useState(1); // Track the step (1, 2, or 3)
+  const [step, setStep] = useState(1);
+  
+  // State for dropdown data
+  const [schools, setSchools] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({ school: "", semester: "", prefix: "" });
+
+  // Fetch dropdown data on component mount
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      setLoading(true);
+      try {
+        const [schoolsResponse, semestersResponse] = await Promise.all([
+          courseSectionService.getAllSchools(),
+          courseSectionService.getAllSemesters()
+        ]);
+
+        if (schoolsResponse.data?.statusCode === 200) {
+          setSchools(schoolsResponse.data.data);
+        }
+
+        if (semestersResponse.data?.statusCode === 200) {
+          setSemesters(semestersResponse.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching dropdown data:", error);
+        // You might want to show a toast or error message here
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDropdownData();
+  }, []);
 
   const validateForm = () => {
     let isValid = true;
@@ -37,9 +69,19 @@ const SelectSemester = () => {
 
   const handleNext = () => {
     if (validateForm()) {
-      setStep(2); // Move to Step 2 after validation
+      setStep(2);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl bg-white p-4 shadow-md rounded-md mb-4">
@@ -57,10 +99,11 @@ const SelectSemester = () => {
         />
       ) : step === 3 ? (
         <SelectTeachers 
-        school={school}
+          school={school}
           semester={semester}
           prefix={prefix}
-        onBack={() => setStep(2)} />
+          onBack={() => setStep(2)} 
+        />
       ) : (
         <div className="bg-white p-4 shadow rounded-md">
           {/* Steps Navigation */}
@@ -100,8 +143,8 @@ const SelectSemester = () => {
               className={`w-full mt-1 p-2 border rounded ${errors.school ? "border-red-500" : "border-gray-300"}`}
             >
               <option value="">-Select-</option>
-              {mockSchools.map((s) => (
-                <option key={s.id} value={s.schoolName}>
+              {schools.map((s) => (
+                <option key={s.schoolId} value={s.schoolId}>
                   {s.schoolName}
                 </option>
               ))}
@@ -115,9 +158,9 @@ const SelectSemester = () => {
               className={`w-full mt-1 p-2 border rounded ${errors.semester ? "border-red-500" : "border-gray-300"}`}
             >
               <option value="">-Select-</option>
-              {mockSemesters.map((sem) => (
-                <option key={sem.id} value={sem.name}>
-                  {sem.name}
+              {semesters.map((sem) => (
+                <option key={sem.semesterId} value={sem.semesterId}>
+                  {sem.semesterName}
                 </option>
               ))}
             </select>

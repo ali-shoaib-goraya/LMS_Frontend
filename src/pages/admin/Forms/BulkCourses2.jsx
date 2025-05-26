@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { mockCourses2 } from "../../../MockData/mockCourses2";
+import React, { useState, useEffect } from "react";
+import courseSectionService from "../../../services/courseSectionService";
 import SelectTeachers from "../Forms/BulkCourses3";
 
 const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
   const [selected, setSelected] = useState(selectedCourses);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     code: "",
     name: "",
@@ -11,6 +13,25 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
     creditHours: "",
     deliveryFormat: ""
   });
+
+  // Fetch courses from backend
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoading(true);
+      try {
+        const response = await courseSectionService.getAllCourses();
+        if (response.data?.statusCode === 200) {
+          setCourses(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleCheckboxChange = (courseId) => {
     setSelected((prev) =>
@@ -33,7 +54,7 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
   };
 
   // Filter courses based on search criteria
-  const filteredCourses = mockCourses2.filter((course) => {
+  const filteredCourses = courses.filter((course) => {
     let deliveryFormat = "";
     if (!course.isTheory) {
       deliveryFormat = "Lab";
@@ -51,6 +72,16 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
       (!filters.deliveryFormat || deliveryFormat.toLowerCase().includes(filters.deliveryFormat.toLowerCase()))
     );
   });
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="bg-white p-6 rounded shadow-lg">
+          <div className="text-lg text-gray-600">Loading courses...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -173,10 +204,59 @@ const CoursesTablePopup = ({ onClose, onSave, selectedCourses }) => {
 const AddCourses = ({ school, semester, prefix, onBack, onNext }) => {
   const [courses, setCourses] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [step, setStep] = useState(2); // Start from Step 2
+  const [step, setStep] = useState(2);
+  const [allCourses, setAllCourses] = useState([]);
+  const [schoolName, setSchoolName] = useState("");
+  const [semesterName, setSemesterName] = useState("");
+
+  // Fetch school and semester names for display
+  useEffect(() => {
+    const fetchNames = async () => {
+      try {
+        const [schoolsResponse, semestersResponse] = await Promise.all([
+          courseSectionService.getAllSchools(),
+          courseSectionService.getAllSemesters()
+        ]);
+
+        if (schoolsResponse.data?.statusCode === 200) {
+          const selectedSchool = schoolsResponse.data.data.find(s => s.schoolId.toString() === school.toString());
+          if (selectedSchool) {
+            setSchoolName(selectedSchool.schoolName);
+          }
+        }
+
+        if (semestersResponse.data?.statusCode === 200) {
+          const selectedSemester = semestersResponse.data.data.find(s => s.semesterId.toString() === semester.toString());
+          if (selectedSemester) {
+            setSemesterName(selectedSemester.semesterName);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching names:", error);
+      }
+    };
+
+    fetchNames();
+  }, [school, semester]);
+
+  // Fetch all courses for selection
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await courseSectionService.getAllCourses();
+        if (response.data?.statusCode === 200) {
+          setAllCourses(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleSaveCourses = (selectedCourseIds) => {
-    const selectedCourses = mockCourses2.filter((course) =>
+    const selectedCourses = allCourses.filter((course) =>
       selectedCourseIds.includes(course.courseId)
     );
 
@@ -239,11 +319,11 @@ const AddCourses = ({ school, semester, prefix, onBack, onNext }) => {
           <div className="mt-6 grid grid-cols-3 gap-4 mb-6">
             <div>
               <label className="block text-gray-700 font-medium">School</label>
-              <input type="text" value={school} readOnly className="w-full mt-1 p-2 border rounded bg-gray-100 text-gray-700" />
+              <input type="text" value={schoolName} readOnly className="w-full mt-1 p-2 border rounded bg-gray-100 text-gray-700" />
             </div>
             <div>
               <label className="block text-gray-700 font-medium">Semester</label>
-              <input type="text" value={semester} readOnly className="w-full mt-1 p-2 border rounded bg-gray-100 text-gray-700" />
+              <input type="text" value={semesterName} readOnly className="w-full mt-1 p-2 border rounded bg-gray-100 text-gray-700" />
             </div>
             <div>
               <label className="block text-gray-700 font-medium">Prefix</label>
@@ -266,7 +346,7 @@ const AddCourses = ({ school, semester, prefix, onBack, onNext }) => {
                     <th className="border px-4 py-2">Course Code</th>
                     <th className="border px-4 py-2">Name</th>
                     <th className="border px-4 py-2">Department</th>
-                    <th className="border px-4 py-2">Sections</th> {/* New Column */}
+                    <th className="border px-4 py-2">Sections</th>
                   </tr>
                 </thead>
                 <tbody>
