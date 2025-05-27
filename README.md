@@ -85,11 +85,6 @@ npm run dev
 > App will be available at: `http://localhost:5173`
 
 
-## 👨‍💻 Contributors
-
-* **Ali Shoaib** – Frontend Architecture & LMS Workflow, Backend Integration and State Management
-* **Muhammad Bilal** – UI/UX, static screens development and Routing of application.
-
 ---
 
 ## 📄 License
