@@ -6,7 +6,6 @@ import EyeSlashIcon from '@/assets/eyeslash.png';
 import { useAuth } from '../../auth/AuthContext';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import api from "../../api/axios"; // Ensure this is the correct path to your axios instance
 
 function LoginForm({ userType }) {
   const { login } = useAuth();
@@ -45,12 +44,16 @@ function LoginForm({ userType }) {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/auth/login', {
-        email: formData.username,
-        password: formData.password,
-        type: userType,
-        rememberMe: formData.rememberMe,
-      });
+      // ✅ Directly use environment variable for API endpoint
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/login`, 
+        {
+          email: formData.username,
+          password: formData.password,
+          type: userType,
+          rememberMe: formData.rememberMe,
+        }
+      );
 
       console.log("Login Response", response.data); 
 
