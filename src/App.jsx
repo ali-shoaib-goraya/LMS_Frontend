@@ -20,7 +20,7 @@ import Settings from './pages/adminPages/Settings';
 import StudentsTable from './pages/admin/tables/StudentsTable';
 import FacultyTable from './pages/admin/tables/FacultyTable';
 import CourseSectionTable from './pages/admin/tables/CourseSectionTable';
-import ProgramTable from './pages/admin/tables/programsTable';
+import ProgramTable from './pages/admin/tables/ProgramsTable';
 import DepartmentTable from './pages/admin/tables/DepartmentsTable';
 import ProgramBatchesTable from './pages/admin/tables/ProgramBatchesTable';
 import CampusTable from './pages/admin/tables/CampusTable';
