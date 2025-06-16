@@ -162,131 +162,129 @@ const StudentsTable = () => {
             </div>
           )}
 
-          {/* Table with horizontal scrolling */}
-          <div className="px-6">
-            <div className="overflow-x-auto w-full border border-gray-300 rounded">
-              <table className="w-full border-collapse text-sm">
-                <thead className="bg-white">
-                  <tr className="text-left border-b border-gray-300">
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">#</th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                      <div className="flex flex-col text-center">
-                        <span>Registration No.</span>
-                        <input
-                          type="text"
-                          value={filters.enrollmentNo}
-                          onChange={(e) => handleFilterChange(e, "enrollmentNo")}
-                          className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                          placeholder="Filter..."
-                        />
-                      </div>
-                    </th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                      <div className="flex flex-col text-center">
-                        <span>Name</span>
-                        <input
-                          type="text"
-                          value={filters.name}
-                          onChange={(e) => handleFilterChange(e, "name")}
-                          className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                          placeholder="Filter..."
-                        />
-                      </div>
-                    </th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                      <div className="flex flex-col text-center">
-                        <span>Program Batch</span>
-                        <input
-                          type="text"
-                          value={filters.programBatch}
-                          onChange={(e) => handleFilterChange(e, "programBatch")}
-                          className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                          placeholder="Filter..."
-                        />
-                      </div>
-                    </th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                      <div className="flex flex-col text-center">
-                        <span>Section</span>
-                        <input
-                          type="text"
-                          value={filters.section}
-                          onChange={(e) => handleFilterChange(e, "section")}
-                          className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
-                          placeholder="Filter..."
-                        />
-                      </div>
-                    </th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Name</th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Contact</th>
-                    <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Email</th>
-                    <th className="border border-gray-300 px-4 py-3 text-center whitespace-nowrap">Actions</th>
+          {/* Scrollable Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300 text-sm">
+              <thead className="bg-white">
+                <tr className="text-left border-b border-gray-300">
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">#</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-col text-center">
+                      <span>Registration No.</span>
+                      <input
+                        type="text"
+                        value={filters.enrollmentNo}
+                        onChange={(e) => handleFilterChange(e, "enrollmentNo")}
+                        className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
+                      />
+                    </div>
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-col text-center">
+                      <span>Name</span>
+                      <input
+                        type="text"
+                        value={filters.name}
+                        onChange={(e) => handleFilterChange(e, "name")}
+                        className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
+                      />
+                    </div>
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-col text-center">
+                      <span>Program Batch</span>
+                      <input
+                        type="text"
+                        value={filters.programBatch}
+                        onChange={(e) => handleFilterChange(e, "programBatch")}
+                        className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
+                      />
+                    </div>
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-col text-center">
+                      <span>Section</span>
+                      <input
+                        type="text"
+                        value={filters.section}
+                        onChange={(e) => handleFilterChange(e, "section")}
+                        className="w-full mt-1 p-1 text-sm border border-gray-300 rounded"
+                        placeholder="Filter..."
+                      />
+                    </div>
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Name</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Guardian Contact</th>
+                  <th className="border border-gray-300 px-4 py-3 whitespace-nowrap">Email</th>
+                  <th className="border border-gray-300 px-4 py-3 text-center whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="9" className="text-center text-gray-600 py-8">
+                      Loading students...
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan="9" className="text-center text-gray-600 py-8">
-                        Loading students...
+                ) : students.length > 0 ? (
+                  students.map((student, index) => (
+                    <tr key={student.id} className="text-center hover:bg-gray-100 transition">
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {startIndex + index + 1}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.enrollmentNo}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.firstName} {student.lastName}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.programBatch}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.section}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.guardianName || "-"}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.guardianContact || "-"}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        {student.email}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            className="hover:opacity-80"
+                            onClick={() => handleEditStudent(student)}
+                            title="Edit Student"
+                          >
+                            <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                          </button>
+                          <button
+                            className="hover:opacity-80"
+                            onClick={() => handleDeleteStudent(student.id)}
+                            title="Delete Student"
+                          >
+                            <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ) : students.length > 0 ? (
-                    students.map((student, index) => (
-                      <tr key={student.id} className="text-center hover:bg-gray-100 transition">
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {startIndex + index + 1}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.enrollmentNo}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.firstName} {student.lastName}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.programBatch}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.section}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.guardianName || "-"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.guardianContact || "-"}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          {student.email}
-                        </td>
-                        <td className="border border-gray-300 px-4 py-3 whitespace-nowrap">
-                          <div className="flex justify-center gap-2">
-                            <button
-                              className="hover:opacity-80"
-                              onClick={() => handleEditStudent(student)}
-                              title="Edit Student"
-                            >
-                              <img src={editIcon} alt="Edit" className="w-5 h-5" />
-                            </button>
-                            <button
-                              className="hover:opacity-80"
-                              onClick={() => handleDeleteStudent(student.id)}
-                              title="Delete Student"
-                            >
-                              <img src={deleteIcon} alt="Delete" className="w-5 h-5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="9" className="text-center text-gray-600 py-8">
-                        No students found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" className="text-center text-gray-600 py-8">
+                      No students found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination - Always show but disable when only one page */}
