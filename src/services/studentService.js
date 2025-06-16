@@ -19,6 +19,7 @@ const studentService = {
     getStudentById: (studentId) => api.get(`/semesters/${studentId}`),
     getProgramBatches: () => api.get('/batches'),
     getSectionsByBatchId: (batchId) => api.get(`/sections/${batchId}`),
+    enrollStudentsInCourseSection: (data) => api.post('/enrollments/bulk-enroll', data),
 }
 
 export default studentService; 

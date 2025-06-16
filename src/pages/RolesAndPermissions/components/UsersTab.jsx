@@ -1,19 +1,39 @@
-import { useState } from 'react';
-import EditUserForm from './EditUserForm';  
-import { allUsers } from '../../../MockData/mockData';  
+import { useState, useEffect } from 'react';
+import EditUserForm from './EditUserForm';   
 import { allRoles } from '../../../MockData/mockData';
-// Import images for the action buttons
 import PencilIcon from '@/assets/pencil.png';
 import TrashIcon from '@/assets/trash.png';
 import LinkIcon from '@/assets/link.png';
-
+import facultyService from "../../../services/facultyService"; // Import faculty service for faculty management
 // Available roles for users
+
 const availableRoles = allRoles.map((role) => role.name);
 
 function UsersTab() {
   // State hooks to manage users and the currently edited user
-  const [users, setUsers] = useState(allUsers); // List of users
+  const [users, setUsers] = useState([]); // List of users
   const [editingUser, setEditingUser] = useState(null); // Track user being edited
+
+  // Fetch users on component mount
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await facultyService.getAllFaculty();
+        console.log(response);
+        const fetchedUsers = response.data.data.map((user) => ({
+          id: user.id,
+          name: user.firstName + ' ' + user.lastName,
+          email: user.email,
+          roles: user.roles,
+          status: "Active", // Default status
+        }));
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching faculty data:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Function to handle editing a user
   const handleEdit = (user) => {

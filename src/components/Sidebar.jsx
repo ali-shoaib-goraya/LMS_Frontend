@@ -21,10 +21,10 @@ const navigation = [
     panel: [
       { name: 'Manage Campus', href: '/dashboard/academic/campus' },
       { name: 'Manage School', href: '/dashboard/academic/school' },
+      { name: 'Manage Department', href: '/dashboard/academic/department' },
       { name: 'Manage Program', href: '/dashboard/academic/program' },
       { name: 'Manage Program Batch ', href: '/dashboard/academic/program-batch' },
       { name: 'Manage Batch Sections ', href: '/dashboard/academic/batchsections' },
-      { name: 'Manage Department', href: '/dashboard/academic/department' },
       { name: 'Manage Semester', href: '/dashboard/academic/semester' },
       { name: 'Manage Course Sections', href: '/dashboard/academic/course-section' },
       { name: 'Manage Courses', href: '/dashboard/academic/courses' },

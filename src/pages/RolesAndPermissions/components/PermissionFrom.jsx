@@ -1,40 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
 function PermissionForm({ initialData, onSubmit, onCancel }) {
-  // Set initial data with a fallback to ensure formData is never null or undefined
-  const [formData, setFormData] = useState(initialData || { name: '', description: '', status: 'Inactive' });
+  const [formData, setFormData] = useState({
+    name: initialData?.name || '',
+    description: initialData?.description || '',
+    status: initialData?.status !== undefined ? initialData.status : true, // boolean
+  });
+
   const [errors, setErrors] = useState({});
 
-  // Handle form data change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    if (name === 'status') {
+      setFormData((prev) => ({
+        ...prev,
+        status: value === 'true', // Convert string to boolean
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate the form
     const validationErrors = {};
     if (!formData.name) {
       validationErrors.name = 'Permission Name is required';
     }
 
-    // If there are validation errors, don't submit the form
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    // Otherwise, submit the form
     onSubmit(formData);
   };
 
-  // Effect to reset errors when form data changes
   useEffect(() => {
     setErrors({});
   }, [formData]);
@@ -80,12 +86,12 @@ function PermissionForm({ initialData, onSubmit, onCancel }) {
         <select
           id="status"
           name="status"
-          value={formData.status}
+          value={formData.status ? 'true' : 'false'} // convert boolean to string for select
           onChange={handleChange}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
         </select>
       </div>
 

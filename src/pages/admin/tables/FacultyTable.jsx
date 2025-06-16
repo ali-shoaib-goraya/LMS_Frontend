@@ -28,7 +28,7 @@ const FacultyTable = () => {
     const fetchFaculty = async () => {
       setIsLoading(true);
       try {
-        const response = await facultyService.getAllFaculty({
+        const response = await facultyService.getFaculty({
           pageNumber: currentPage,
           pageSize: itemsPerPage,
           ...filters,

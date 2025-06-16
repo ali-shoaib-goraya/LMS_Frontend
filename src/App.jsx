@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import HomePage from './pages/HomePage';
-import AdminDashboard from './layouts/AdminDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import StudentLogin from './pages/StudentLogin';
 import FacultyLogin from './pages/FacultyLogin';
 import RolesAndPermissions from './pages/RolesAndPermissions';
@@ -67,7 +67,7 @@ const App = () => {
           </Route>
 
           {/* Admin Routes */}
-          <Route path="/dashboard" element={<AdminDashboard />}>
+          <Route path="/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
             <Route index element={<DashboardHome />} />
             <Route path="coursedetail" element={<AdminCourseDetails />} />
             <Route path="roles-permissions/*" element={<RolesAndPermissions />} />

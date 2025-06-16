@@ -21,6 +21,7 @@ const courseService = {
   updateCourseSection: (courseSectionId, data) => api.put(`/coursesections/${courseSectionId}`, data),
   deleteCourseSection: (courseSectionId) => api.delete(`/coursesections/${courseSectionId}`),
   getCourseSectionById: (courseSectionId) => api.get(`/coursesections/${courseSectionId}`),
+  getStudentbyCourseSectionId: (courseSectionId) => api.get(`/coursesections/${courseSectionId}/students`),
   // below are function for dropdowns
   getAllSchools: () => api.get('/schools/all'),
   getAllTeachers: () => api.get('/users/faculty/all'),

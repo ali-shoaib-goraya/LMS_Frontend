@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://localhost:7244/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
+
+console.log('Using API Base URL:', import.meta.env.VITE_API_BASE_URL);
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('access_token');
@@ -32,14 +34,15 @@ api.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then(token => {
-          originalRequest.headers.Authorization = 'Bearer ' + token;
+          originalRequest.headers.Authorization = `Bearer ${token}`;
           return api(originalRequest);
         }).catch(error => Promise.reject(error));
       }
-    
+
       isRefreshing = true;
       try {
-        const refreshResponse = await axios.post('https://localhost:7244/api/auth/refresh', {
+        // ✅ Use the same `api` instance, so it uses the configured baseURL
+        const refreshResponse = await api.post('/auth/refresh', {
           refreshToken: localStorage.getItem('refresh_token'),
         });
 
@@ -47,11 +50,10 @@ api.interceptors.response.use(
         localStorage.setItem('access_token', newToken);
         processQueue(null, newToken);
 
-        originalRequest.headers.Authorization = 'Bearer ' + newToken;
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (error) {
         processQueue(error, null);
-        // Instead of directly redirecting, we could emit an event that the auth context listens to
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         window.location.href = '/student-login';

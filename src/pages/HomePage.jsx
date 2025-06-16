@@ -10,6 +10,7 @@ import discussionforum from "../assets/discussionforum.png";
 import namal from "../assets/namal.jpg";
 import Footer from "../components/student/Footer";
 import { useAuth } from "../auth/AuthContext";
+import grading from "../assets/grading.jpg";
 
 const HomePage = () => {
 
@@ -107,6 +108,12 @@ const accreditations = [
                 alt="Collaboration Tools" className="w-full h-48 object-cover rounded-t-lg mb-4" />
               <h3 className="text-xl font-semibold text-gray-800">Faculty & Student Collaboration</h3>
               <p className="text-gray-600 mt-2">Enable smooth communication between faculty and students for better learning.</p>
+            </div>
+            <div className="p-6 bg-white shadow-md rounded-lg">
+              <img src={grading} 
+                alt="Collaboration Tools" className="w-full h-48 object-cover rounded-t-lg mb-4" />
+              <h3 className="text-xl font-semibold text-gray-800">Automated grading</h3>
+              <p className="text-gray-600 mt-2">Allows teachers to automatically generate grades.</p>
             </div>
           </div>
         </div>

@@ -9,10 +9,9 @@ import VideoMaterial from "./faculty/VideoMaterial";
 import ActivityWeights from "./faculty/ActivityWeights";
 import CourseAttachment from "./faculty/CourseAttachment";
 import EnrolledStudents from "./EnrolledStudents";
-
+import useCourseSectionStore from '../stores/courseSectionStore'; 
 const AdminCourseDetails = () => {
-  const location = useLocation();
-  const course = location.state?.course;
+  const course = useCourseSectionStore(state => state.selectedCourseSection);
 
   const tabsConfig = {
     View: [],
@@ -38,7 +37,7 @@ const AdminCourseDetails = () => {
       <div className="text-center text-red-600 mt-10">Course not found!</div>
     );
   }
-
+ 
   const handleTabClick = (tab) => {
     if (tabsConfig[tab]?.length > 0) {
       setOpenDropdown(openDropdown === tab ? null : tab);
@@ -175,7 +174,7 @@ const AdminCourseDetails = () => {
                 className="bg-gray-200 text-gray-800 px-4 py-2 rounded border border-blue-500 hover:bg-blue-600 hover:text-white transition"
                 onClick={handleEnrolledStudents}
               >
-                Enrolled Students
+                Enrolled Students 
               </button>
             </div>
 
@@ -185,7 +184,7 @@ const AdminCourseDetails = () => {
                 <tbody className="text-sm text-gray-700">
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">School</td>
-                    <td className="px-6 py-3 border border-gray-300">{course.school}</td>
+                    <td className="px-6 py-3 border border-gray-300">{course.schoolName}</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">Department</td>
@@ -193,21 +192,21 @@ const AdminCourseDetails = () => {
                   </tr>
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">Semester</td>
-                    <td className="px-6 py-3 border border-gray-300">{course.term}</td>
+                    <td className="px-6 py-3 border border-gray-300">{course.semesterName}</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-3 font-semibold border border-gray-300">Name</td>
+                    <td className="px-6 py-3 font-semibold border border-gray-300">Course Section</td>
                     <td className="px-6 py-3 border border-gray-300">
-                      {course.semester}-{course.code}-{course.term}
-                    </td>
+                      {course.courseSectionName}
+                    </td> 
                   </tr>
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">Teacher</td>
-                    <td className="px-6 py-3 border border-gray-300">{course.instructorName}</td>
+                    <td className="px-6 py-3 border border-gray-300">{course.facultyName}</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">Course</td>
-                    <td className="px-6 py-3 border border-gray-300">{course.code}-{course.title}</td>
+                    <td className="px-6 py-3 border border-gray-300">{course.courseCode}-{course.courseName}</td>
                   </tr>
                   <tr>
                     <td className="px-6 py-3 font-semibold border border-gray-300">Delivery Format</td>
@@ -235,3 +234,4 @@ const AdminCourseDetails = () => {
 };
 
 export default AdminCourseDetails;
+

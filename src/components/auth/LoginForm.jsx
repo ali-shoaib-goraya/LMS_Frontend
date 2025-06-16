@@ -6,6 +6,7 @@ import EyeSlashIcon from '@/assets/eyeslash.png';
 import { useAuth } from '../../auth/AuthContext';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import api from "../../api/axios"; // Ensure this is the correct path to your axios instance
 
 function LoginForm({ userType }) {
   const { login } = useAuth();
@@ -44,7 +45,7 @@ function LoginForm({ userType }) {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('https://localhost:7244/api/auth/login', {
+      const response = await api.post('/auth/login', {
         email: formData.username,
         password: formData.password,
         type: userType,
