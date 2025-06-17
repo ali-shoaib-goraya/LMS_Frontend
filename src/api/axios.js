@@ -94,7 +94,7 @@ api.interceptors.response.use(
 
         // ✅ Use direct environment variable with fallback for refresh endpoint
         const apiBaseUrl = getApiBaseUrl();
-        const refreshUrl = `${apiBaseUrl}/api/auth/refresh`;
+        const refreshUrl = `${apiBaseUrl}/auth/refresh`;
         
         console.log('Making refresh request to:', refreshUrl);
 

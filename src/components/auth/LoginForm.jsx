@@ -57,7 +57,7 @@ function LoginForm({ userType }) {
     try {
       // ✅ Use direct environment variable with fallback
       const apiBaseUrl = getApiBaseUrl();
-      const loginUrl = `${apiBaseUrl}/api/auth/login`;
+      const loginUrl = `${apiBaseUrl}/auth/login`;
       
       console.log('Making login request to:', loginUrl);
 
