@@ -20,6 +20,17 @@ function LoginForm({ userType }) {
 
   const navigate = useNavigate();
 
+  // ✅ Fallback protection for API base URL
+  const getApiBaseUrl = () => {
+    const envUrl = import.meta.env.VITE_API_BASE_URL;
+    const fallbackUrl = 'https://lms-apis-gce2c2dkg5bghwhm.eastasia-01.azurewebsites.net/api';
+    
+    console.log('Environment URL:', envUrl);
+    console.log('Using API Base URL:', envUrl || fallbackUrl);
+    
+    return envUrl || fallbackUrl;
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = 'Username is required';
@@ -44,16 +55,18 @@ function LoginForm({ userType }) {
     setIsLoading(true);
 
     try {
-      // ✅ Directly use environment variable for API endpoint
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/login`, 
-        {
-          email: formData.username,
-          password: formData.password,
-          type: userType,
-          rememberMe: formData.rememberMe,
-        }
-      );
+      // ✅ Use direct environment variable with fallback
+      const apiBaseUrl = getApiBaseUrl();
+      const loginUrl = `${apiBaseUrl}/auth/login`;
+      
+      console.log('Making login request to:', loginUrl);
+
+      const response = await axios.post(loginUrl, {
+        email: formData.username,
+        password: formData.password,
+        type: userType,
+        rememberMe: formData.rememberMe,
+      });
 
       console.log("Login Response", response.data); 
 
@@ -83,12 +96,22 @@ function LoginForm({ userType }) {
       }
     } catch (err) {
       console.log("Login Error", err);
+      console.log("Error Response:", err.response);
+      
       const errorMessages = {
         400: 'Missing Username or Password',
         401: 'Invalid Username or Password',
+        404: 'Login endpoint not found',
+        405: 'Method not allowed - Please check API configuration',
+        500: 'Server error - Please try again later',
       };
+      
+      const errorMessage = errorMessages[err.response?.status] || 
+                          err.response?.data?.message || 
+                          'Login Failed - Please check your connection';
+      
       setErrors({ 
-        form: errorMessages[err.response?.status] || 'Login Failed' 
+        form: errorMessage
       });
     } finally {
       setIsLoading(false);
@@ -97,7 +120,11 @@ function LoginForm({ userType }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {errors.form && <div className="text-red-500 text-sm">{errors.form}</div>}
+      {errors.form && (
+        <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md border border-red-200">
+          {errors.form}
+        </div>
+      )}
 
       <InputField
         label="Username"
