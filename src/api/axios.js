@@ -3,7 +3,7 @@ import axios from 'axios';
 // ✅ Fallback protection for API base URL
 const getApiBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
-  const fallbackUrl = 'https://lms-apis-gce2c2dkg5bghwhm.eastasia-01.azurewebsites.net/api';
+  const fallbackUrl = 'https://lms-apis-gce2c2dkg5bghwhm.eastasia-01.azurewebsites.net';
   
   console.log('Environment URL:', envUrl);
   console.log('All environment variables:', import.meta.env);
@@ -94,7 +94,7 @@ api.interceptors.response.use(
 
         // ✅ Use direct environment variable with fallback for refresh endpoint
         const apiBaseUrl = getApiBaseUrl();
-        const refreshUrl = `${apiBaseUrl}/auth/refresh`;
+        const refreshUrl = `${apiBaseUrl}/api/auth/refresh`;
         
         console.log('Making refresh request to:', refreshUrl);
 
