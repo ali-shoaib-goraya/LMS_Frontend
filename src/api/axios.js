@@ -3,7 +3,7 @@ import axios from 'axios';
 // ✅ Fallback protection for API base URL
 const getApiBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
-  const fallbackUrl = 'https://lms-apis-gce2c2dkg5bghwhm.eastasia-01.azurewebsites.net';
+  const fallbackUrl = 'https://lms-apis-gce2c2dkg5bghwhm.eastasia-01.azurewebsites.net/api';
   
   console.log('Environment URL:', envUrl);
   console.log('All environment variables:', import.meta.env);
